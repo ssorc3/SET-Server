@@ -7,12 +7,10 @@
 
 #HomeController
 GET      /                           controllers.HomeController.index
-GET      /delete                     controllers.HomeController.delete
 
 #UserController
 POST     /token                      controllers.UserController.getToken
 POST     /create                     controllers.UserController.createUser
-GET      /secret                     controllers.UserController.getSecret
 
 #SensorController
 POST     /registerDevice             controllers.SensorController.registerDevice

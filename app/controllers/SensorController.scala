@@ -20,7 +20,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     devices.create(deviceID, userID, deviceName).map(_ => Ok("Device Registered"))
   }
 
-  def getUserDevices(): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
+  def getUserDevices: Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     val userID = request.user.userID
     devices.getUserDevices(userID).map(d => Ok(d))
   }
