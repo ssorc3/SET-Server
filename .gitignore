@@ -6,3 +6,8 @@ target
 /.project
 /.settings
 /RUNNING_PID
+.gradle/
+.g8/
+build.gradle
+gradlew
+gradlew.bat
