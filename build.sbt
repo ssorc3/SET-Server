@@ -15,11 +15,10 @@ libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3"
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.196"
 
-libraryDependencies += ws
-libraryDependencies += ehcache
-
 libraryDependencies += "org.mindrot" % "jbcrypt" % "0.4"
 
 libraryDependencies += "com.jason-goodwin" %% "authentikat-jwt" % "0.4.5"
+
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"
 
 libraryDependencies += specs2 % Test
