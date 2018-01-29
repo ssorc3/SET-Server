@@ -1,5 +1,9 @@
 logs
 start
+build
+rebuild
+stop
+restart
 target
 /.idea
 /.idea_modules
