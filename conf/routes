@@ -1,0 +1,23 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+
+#HomeController
+GET      /                           controllers.HomeController.index
+GET      /delete                     controllers.HomeController.delete
+
+#UserController
+POST     /token                      controllers.UserController.getToken
+POST     /create                     controllers.UserController.createUser
+GET      /secret                     controllers.UserController.getSecret
+
+#SensorController
+POST     /registerDevice             controllers.SensorController.registerDevice
+GET      /devices                    controllers.SensorController.getUserDevices
+
+POST    /sensor/0/:deviceID          controllers.SensorController.receiveTemperature(deviceID)
+POST    /sensor/1/:deviceID          controllers.SensorController.receiveHumidity(deviceID)
+POST    /sensor/2/:deviceID          controllers.SensorController.receiveLight(deviceID)
