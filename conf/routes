@@ -5,8 +5,8 @@
 
 # An example controller showing a sample home page
 
-#HomeController
-GET      /                           controllers.HomeController.index
+#Swagger
+GET      /swagger.json               controllers.ApiHelpController.getResources
 
 #UserController
 POST     /token                      controllers.UserController.getToken
