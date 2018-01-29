@@ -11,7 +11,7 @@ class HomeController @Inject()(cc: ControllerComponents, users: UserRepository, 
   def index() = Action { implicit request =>
     Ok("Hello, World!")
   }
-  
+
   def delete = Action { implicit request =>
     users.delete()
     devices.delete()
