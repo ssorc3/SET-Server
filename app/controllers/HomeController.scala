@@ -9,8 +9,9 @@ import scala.concurrent.ExecutionContext
 
 class HomeController @Inject()(cc: ControllerComponents, users: UserRepository, devices: DeviceRepository, sensors: SensorDataRepository)(implicit ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
-    Ok("")
+    Ok("Hello, World!")
   }
+  
   def delete = Action { implicit request =>
     users.delete()
     devices.delete()
