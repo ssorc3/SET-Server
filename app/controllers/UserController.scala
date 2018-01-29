@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class CreateUserForm(username: String, password: String)
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, auth: SecuredAuthenicator, jwtUtil: JWTUtil, repo: UserRepository, devices: DeviceRepository)(implicit ec: ExecutionContext) extends AbstractController(cc)
+class UserController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, repo: UserRepository)(implicit ec: ExecutionContext) extends AbstractController(cc)
 {
   def createUser: Action[JsValue] = Action.async(parse.json) { implicit request =>
     val username = (request.body \ "username").as[String]
@@ -37,10 +37,5 @@ class UserController @Inject()(cc: ControllerComponents, auth: SecuredAuthenicat
       ))))
       case false => Unauthorized("Invalid Credentials")
     }
-  }
-
-
-  def getSecret = auth.JWTAuthentication { implicit request =>
-    Ok("This is a secret")
   }
 }
