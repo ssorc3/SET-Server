@@ -3,7 +3,8 @@ package controllers
 import javax.inject._
 
 import auth._
-import models.{DeviceRepository, UserRepository}
+
+import models.UserRepository
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
