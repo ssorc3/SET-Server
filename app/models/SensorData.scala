@@ -19,4 +19,29 @@ object TemperatureData {
 }
 
 case class HumidityData(id: Int, deviceID: String, timestamp: Long, value: Double)
+
+object HumidityData {
+  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[HumidityData]] = {
+    Writeable(data => codec.encode(Json.toJson(data).toString))
+  }
+
+  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[HumidityData]] = {
+    ContentTypeOf(Some(ContentTypes.TEXT))
+  }
+
+  implicit val deviceFormat: OFormat[HumidityData] = Json.format[HumidityData]
+}
+
 case class LightData(id: Int, deviceID: String, timestamp: Long, value: Double)
+
+object LightData {
+  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[LightData]] = {
+    Writeable(data => codec.encode(Json.toJson(data).toString))
+  }
+
+  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[LightData]] = {
+    ContentTypeOf(Some(ContentTypes.TEXT))
+  }
+
+  implicit val deviceFormat: OFormat[LightData] = Json.format[LightData]
+}

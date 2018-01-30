@@ -50,6 +50,10 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       into ((stuff, id) => HumidityData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
 
+  def getHumidity(deviceID: String) = db.run {
+    humidities.filter(_.deviceID === deviceID).result
+  }
+
   class LightDataTable(tag: Tag) extends Table[LightData](tag, "light")
   {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
@@ -67,6 +71,10 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       returning lights.map(_.id)
       into ((stuff, id) => LightData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
+  
+  def getLight(deviceID: String) = db.run {
+    lights.filter(_.deviceID === deviceID).result
+  }
 
   def delete(): Future[Int] = db.run {
     temperatures.delete

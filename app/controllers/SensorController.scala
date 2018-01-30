@@ -54,12 +54,28 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  def getHumidity(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+    devices.exists(deviceID).flatMap{
+      case true =>
+        sensors.getHumidity(deviceID).map(t => Ok(t))
+      case false => Future.successful(BadRequest("Invalid device"))
+    }
+  }
+
   def receiveLight(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
     devices.exists(deviceID).flatMap{
       case true =>
         val value: Double = (request.body \ "value").as[Double]
         val timestamp: Long = (request.body \ "timestamp").as[Long]
         sensors.addLightReading(value, deviceID, timestamp).map(_ => Ok("Light recorded"))
+      case false => Future.successful(BadRequest("Invalid device"))
+    }
+  }
+
+  def getLight(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+    devices.exists(deviceID).flatMap{
+      case true =>
+        sensors.getLight(deviceID).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
