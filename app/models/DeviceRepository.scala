@@ -33,6 +33,10 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     devices.filter(_.deviceID === deviceID).exists.result
   }
 
+  def deviceBelongsToUser(deviceID: String, userID: String): Future[Boolean] = db.run{
+    devices.filter(d => d.deviceID === deviceID && d.userID === userID).exists.result
+  }
+
   def delete(): Future[Int] = db.run{
     devices.delete
   }
