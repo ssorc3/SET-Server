@@ -28,6 +28,10 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       into ((stuff, id) => TemperatureData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
 
+  def getTemperatures(deviceID: String) = db.run {
+    temperatures.filter(_.deviceID === deviceID).result
+  }
+
   class HumidityDataTable(tag: Tag) extends Table[HumidityData](tag, "humidity")
   {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)

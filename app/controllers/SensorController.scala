@@ -36,6 +36,14 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  def getTemperatures(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+    devices.exists(deviceID).flatMap{
+      case true =>
+        sensors.getTemperatures(deviceID).map(t => Ok(t))
+      case false => Future.successful(BadRequest("Invalid device"))
+    }
+  }
+
   def receiveHumidity(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
     devices.exists(deviceID).flatMap{
       case true =>
