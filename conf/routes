@@ -16,6 +16,6 @@ GET      /devices                    controllers.SensorController.getUserDevices
 POST    /sensor/0/:deviceID          controllers.SensorController.receiveTemperature(deviceID)
 GET     /sensor/0/:deviceID          controllers.SensorController.getTemperatures(deviceID)
 POST    /sensor/1/:deviceID          controllers.SensorController.receiveHumidity(deviceID)
-GET     /sensor/0/:deviceID          controllers.SensorController.getHumidity(deviceID)
+GET     /sensor/1/:deviceID          controllers.SensorController.getHumidity(deviceID)
 POST    /sensor/2/:deviceID          controllers.SensorController.receiveLight(deviceID)
-GET     /sensor/0/:deviceID          controllers.SensorController.getLight(deviceID)
+GET     /sensor/2/:deviceID          controllers.SensorController.getLight(deviceID)

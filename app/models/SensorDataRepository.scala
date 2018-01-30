@@ -71,7 +71,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       returning lights.map(_.id)
       into ((stuff, id) => LightData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
-  
+
   def getLight(deviceID: String) = db.run {
     lights.filter(_.deviceID === deviceID).result
   }
