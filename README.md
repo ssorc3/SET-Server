@@ -16,15 +16,17 @@ Sample Request:
 }
 returns token for existing user
 
-Register a new device: POST /registerDevice
+Register a new device: POST /device/(deviceID)
 Sample Request:
 {
-  "deviceID": (DEVICEID),
   "deviceName": "Living room alarm"
 }
 Requires User Token
 
-Get user devices: GET /devices
+Delete device: DELETE /device/(deviceID)
+Requires User Token
+
+Get user devices: GET /device
 Requires User Token
 
 Send Temperature Data: POST /sensors/0/(deviceID)
