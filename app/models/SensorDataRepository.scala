@@ -29,7 +29,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }.map(_.id)
 
   def getTemperatures(deviceID: String, page: Int) = db.run {
-    temperatures.filter(_.deviceID === deviceID).drop(10*(page-1)).take(10).result
+    temperatures.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
   class HumidityDataTable(tag: Tag) extends Table[HumidityData](tag, "humidity")
@@ -51,7 +51,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }.map(_.id)
 
   def getHumidity(deviceID: String, page: Int) = db.run {
-    humidities.filter(_.deviceID === deviceID).drop(10*(page-1)).take(10).result
+    humidities.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
   class LightDataTable(tag: Tag) extends Table[LightData](tag, "light")
@@ -73,7 +73,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }.map(_.id)
 
   def getLight(deviceID: String, page: Int) = db.run {
-    lights.filter(_.deviceID === deviceID).drop(10*(page-1)).take(10).result
+    lights.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
   def delete(): Future[Int] = db.run {
