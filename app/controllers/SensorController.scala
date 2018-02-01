@@ -52,7 +52,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   def getTemperature(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
-        sensors.getTemperatures(deviceID).map(t => Ok(t))
+        sensors.getTemperatures(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
@@ -70,7 +70,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   def getHumidity(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
-        sensors.getHumidity(deviceID).map(t => Ok(t))
+        sensors.getHumidity(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
@@ -88,7 +88,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   def getLight(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
-        sensors.getLight(deviceID).map(t => Ok(t))
+        sensors.getLight(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
