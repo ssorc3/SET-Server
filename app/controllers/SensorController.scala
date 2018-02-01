@@ -17,9 +17,9 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     val userID = request.user.userID
     val deviceName = (request.body \ "deviceName").as[String]
     devices.exists(deviceID).flatMap{
-      case true =>
+      case false =>
         devices.create(deviceID, userID, deviceName).map(_ => Ok("Device Registered"))
-      case false => Future.successful(BadRequest("Device already registered"))
+      case true => Future.successful(BadRequest("Device already registered"))
     }
   }
 
@@ -49,7 +49,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getTemperatures(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getTemperature(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getTemperatures(deviceID).map(t => Ok(t))
@@ -67,7 +67,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getHumidity(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getHumidity(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getHumidity(deviceID).map(t => Ok(t))
@@ -85,7 +85,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getLight(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getLight(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getLight(deviceID).map(t => Ok(t))
