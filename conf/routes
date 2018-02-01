@@ -10,8 +10,9 @@ POST     /token                      controllers.UserController.getToken
 POST     /create                     controllers.UserController.createUser
 
 #SensorController
-POST     /registerDevice             controllers.SensorController.registerDevice
-GET      /devices                    controllers.SensorController.getUserDevices
+GET      /device                     controllers.SensorController.getUserDevices
+POST     /device/:deviceID           controllers.SensorController.registerDevice(deviceID)
+DELETE   /device/:deviceID           controllers.SensorController.deleteUserDevice(deviceID)
 
 POST    /sensor/0/:deviceID          controllers.SensorController.receiveTemperature(deviceID)
 GET     /sensor/0/:deviceID          controllers.SensorController.getTemperatures(deviceID)

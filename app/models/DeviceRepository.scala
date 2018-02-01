@@ -37,7 +37,13 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     devices.filter(d => d.deviceID === deviceID && d.userID === userID).exists.result
   }
 
-  def delete(): Future[Int] = db.run{
-    devices.delete
+  def delete(deviceID: String, userID: String): Future[Boolean] = {
+    val device = devices.filter(d => d.userID === userID && d.deviceID === deviceID)
+    db.run(device.exists.result).flatMap {
+      case true => db.run{
+        device.delete
+      }.map(_ => true)
+      case false => Future(false)
+    }
   }
 }

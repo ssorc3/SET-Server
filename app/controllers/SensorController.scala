@@ -13,8 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenicator, devices: DeviceRepository, sensors: SensorDataRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
 
-  def registerDevice(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
-    val deviceID = (request.body \ "deviceID").as[String]
+  def registerDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
     val deviceName = (request.body \ "deviceName").as[String]
     devices.create(deviceID, userID, deviceName).map(_ => Ok("Device Registered"))
@@ -23,6 +22,16 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   def getUserDevices: Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     val userID = request.user.userID
     devices.getUserDevices(userID).map(d => Ok(d))
+  }
+
+  def deleteUserDevice(deviceID: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
+    val userID = request.user.userID
+    devices.delete(deviceID, userID).map{
+      case true =>
+        Ok("Device has been deleted")
+      case false =>
+        BadRequest("Either the device doesn't exist or the user provided does not own the device")
+    }
   }
 
   // /sensor/{type}/{deviceID}
