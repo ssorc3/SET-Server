@@ -17,7 +17,9 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     val userID = request.user.userID
     val deviceName = (request.body \ "deviceName").as[String]
     devices.exists(deviceID).flatMap{
-      devices.create(deviceID, userID, deviceName).map(_ => Ok("Device Registered"))
+      case true =>
+        devices.create(deviceID, userID, deviceName).map(_ => Ok("Device Registered"))
+      case false => Future.successful(BadRequest("Device already registered"))
     }
   }
 
