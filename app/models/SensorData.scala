@@ -45,3 +45,17 @@ object LightData {
 
   implicit val deviceFormat: OFormat[LightData] = Json.format[LightData]
 }
+
+case class NoiseData(id: Int, deviceID: String, timestamp: Long, value: Double)
+
+object NoiseData {
+  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[NoiseData]] = {
+    Writeable(data => codec.encode(Json.toJson(data).toString))
+  }
+
+  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[NoiseData]] = {
+    ContentTypeOf(Some(ContentTypes.TEXT))
+  }
+
+  implicit val deviceFormat: OFormat[NoiseData] = Json.format[NoiseData]
+}

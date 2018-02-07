@@ -9,6 +9,6 @@ import scala.concurrent.ExecutionContext
 
 class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
-    Ok(request.body.toString)
+    Ok("Hello, World!")
   }
 }

@@ -28,7 +28,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       into ((stuff, id) => TemperatureData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
 
-  def getTemperatures(deviceID: String, page: Int) = db.run {
+  def getTemperatures(deviceID: String, page: Int): Future[Seq[TemperatureData]] = db.run {
     temperatures.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
@@ -50,7 +50,7 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       into ((stuff, id) => HumidityData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
 
-  def getHumidity(deviceID: String, page: Int) = db.run {
+  def getHumidity(deviceID: String, page: Int): Future[Seq[HumidityData]] = db.run {
     humidities.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
@@ -72,13 +72,9 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
       into ((stuff, id) => LightData(id, stuff._2, stuff._3, stuff._1))) += (value, deviceID, timestamp)
   }.map(_.id)
 
-  def getLight(deviceID: String, page: Int) = db.run {
+  def getLight(deviceID: String, page: Int): Future[Seq[LightData]] = db.run {
     lights.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
-  def delete(): Future[Int] = db.run {
-    temperatures.delete
-    humidities.delete
-    lights.delete
-  }
+
 }
