@@ -5,6 +5,10 @@
 
 # An example controller showing a sample home page
 
+#HomeController
+GET      /                           controllers.HomeController.index
+GET      /ws                         controllers.HomeController.socketTest
+
 #UserController
 POST     /token                      controllers.UserController.getToken
 POST     /create                     controllers.UserController.createUser

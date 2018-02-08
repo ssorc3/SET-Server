@@ -2,13 +2,31 @@ package controllers
 
 import javax.inject.Inject
 
-import models.{DeviceRepository, SensorDataRepository, UserRepository}
-import play.api.mvc.{AbstractController, ControllerComponents}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import play.api.libs.streams.ActorFlow
+import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
-class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc){
+class HomeController @Inject()(cc: ControllerComponents)(implicit system: ActorSystem, implicit ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
     Ok("Hello, World!")
+  }
+
+  def socketTest = WebSocket.accept[String, String]{ implicit request =>
+    ActorFlow.actorRef{ out =>
+      WebSocketActor.props(out)
+    }
+  }
+}
+
+object WebSocketActor{
+  def props(out: ActorRef) = Props(new WebSocketActor(out))
+}
+
+class WebSocketActor(out: ActorRef) extends Actor{
+  def receive = {
+    case msg: String =>
+      out ! "I received your message:" + msg
   }
 }
