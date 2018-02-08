@@ -3,12 +3,13 @@ package controllers
 import javax.inject.Inject
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.stream.Materializer
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
-class HomeController @Inject()(cc: ControllerComponents)(implicit system: ActorSystem, ec: ExecutionContext) extends AbstractController(cc){
+class HomeController @Inject()(cc: ControllerComponents)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
     Ok("Hello, World!")
   }
