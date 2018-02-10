@@ -1,6 +1,6 @@
 package websockets
 
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+import java.util.concurrent.ConcurrentHashMap
 
 import akka.actor.ActorRef
 
@@ -10,20 +10,20 @@ import scala.collection.mutable
 class WebSocketManager {
   private var connections: mutable.Map[String, ActorRef] = new ConcurrentHashMap[String, ActorRef]().asScala
 
-  def AddConnection(userID: String, ws: ActorRef): Unit = {
-    connections += (userID -> ws)
+  def AddConnection(deviceID: String, ws: ActorRef): Unit = {
+    connections += (deviceID -> ws)
   }
 
-  def removeConnection(userID: String): Unit = {
-    connections -= userID
+  def removeConnection(deviceID: String): Unit = {
+    connections -= deviceID
   }
 
   def getConnections(): mutable.Map[String, ActorRef] = {
     connections
   }
 
-  def getConnection(userID: String): Option[ActorRef] = {
-    connections.get(userID)
+  def getConnection(deviceID: String): Option[ActorRef] = {
+    connections.get(deviceID)
   }
 }
 

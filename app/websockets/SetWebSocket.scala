@@ -1,8 +1,9 @@
 package websockets
 
 import akka.actor.{Actor, ActorRef, PoisonPill, Props}
+import models.DeviceRepository
 
-class SetWebSocket(out: ActorRef) extends Actor
+class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository) extends Actor
 {
   var bridgeID = ""
 
@@ -11,8 +12,11 @@ class SetWebSocket(out: ActorRef) extends Actor
       if(msg.startsWith("BRIDGEID: "))
       {
         bridgeID = msg.substring(10)
-        WebSocketManager.AddConnection(msg.substring(10), out)
-        out ! "Stored your connection with deviceID: " + msg.substring(10)
+        WebSocketManager.AddConnection(bridgeID, out)
+        devices.isBridge(bridgeID).map{
+          case false => devices.setAsBridge(bridgeID)
+        }
+        out ! "Stored your connection with bridgeID: " + bridgeID
       }
       else {
         if(bridgeID == "")
@@ -31,5 +35,5 @@ class SetWebSocket(out: ActorRef) extends Actor
 }
 
 object SetWebSocket {
-  def props(out: ActorRef): Props = Props(new SetWebSocket(out))
+  def props(out: ActorRef)(implicit devices: DeviceRepository): Props = Props(new SetWebSocket(out))
 }

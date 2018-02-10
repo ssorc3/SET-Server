@@ -1,19 +1,42 @@
 package setLang
 
+import models.DeviceRepository
 import setLang.model._
+import websockets.WebSocketManager
+import akka.actor._
 
-class Interpreter(program: List[Statement], temperatureValue: Double, humidityValue: Double, lightValue: Double, noiseValue: Int)
+class Interpreter(program: List[Statement], userID: String, devices: DeviceRepository,
+                  temperatureValue: Double, humidityValue: Double,
+                  lightValue: Double, noiseValue: Int)
 {
   def run(): Unit = {
     for (statement: Statement <- program) {
       if (walkConditional(statement.condition)) {
         for (action: Action <- statement.actions) {
           action match {
-            case Email() => println("Email")                      //TODO: Dispatch email
-            case Text() => println("Text")                        //TODO: Send Text
-            case Notification() => println("Notification")        //TODO: Send Notification
-            case Kettle() => println("Kettle")                    //TODO: Turn on Kettle
-            case Lights(command) => println("Lights " + command)  //TODO: Send command to lights
+            case Email() => {
+              //Can't email yet
+            }
+            case Text() => {
+              //Can't text yet
+            }
+            case Notification() => {
+              //Can't do notifications yet
+            }
+            case Kettle() => {
+              devices.getUserBridges(userID).map(_.foreach(b => {
+                WebSocketManager.getConnection(b) match {
+                  case Some(c) => c ! "kettle"
+                }
+              }))
+            }
+            case Lights(command) => {
+              devices.getUserBridges(userID).map(_.foreach(b => {
+                WebSocketManager.getConnection(b) match {
+                  case Some(c) => c ! "lights" + command.toString
+                }
+              }))
+            }
             case _ => println("hi")
           }
         }

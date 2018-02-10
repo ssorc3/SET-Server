@@ -4,6 +4,8 @@ import play.api.http._
 import play.api.mvc._
 import play.api.libs.json._
 
+case class Bridge(bridgeID: String)
+
 case class Device(deviceID: String, userID: String, deviceName: String)
 case class DeviceDTO(deviceID: String, deviceName: String)
 

@@ -46,4 +46,29 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
       case false => Future(false)
     }
   }
+
+  class BridgeTable(tag: Tag) extends Table[Bridge](tag, "bridges")
+  {
+    def deviceID = column[String]("deviceID", O.PrimaryKey)
+
+    def * = deviceID <> (Bridge.apply, Bridge.unapply)
+  }
+
+  val bridges = TableQuery[BridgeTable]
+
+  def setAsBridge(deviceID: String): Future[Any] = db.run {
+    bridges += Bridge(deviceID)
+  }
+
+  def getUserBridges(userID: String): Future[Seq[String]] = db.run {
+    devices.filter(_.userID === userID).join(bridges).on(_.deviceID === _.deviceID).map(_._2.deviceID).result
+  }
+
+  def removeBridge(deviceID: String): Future[Any] = db.run {
+    bridges.filter(_.deviceID === deviceID).delete
+  }
+
+  def isBridge(deviceID: String): Future[Boolean] = db.run{
+    bridges.filter(_.deviceID === deviceID).exists.result
+  }
 }

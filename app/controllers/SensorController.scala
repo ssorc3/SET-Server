@@ -4,14 +4,17 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenicator
 import com.google.inject.Singleton
-import models.{DeviceRepository, SensorDataRepository}
+import models.{DeviceRepository, ScriptRepository, SensorDataRepository}
 import play.api.libs.json.JsValue
 import play.api.mvc._
+import setLang.model.Statement
+import setLang.{Interpreter, Parser}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
-class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenicator, devices: DeviceRepository, sensors: SensorDataRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
+class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenicator, devices: DeviceRepository, sensors: SensorDataRepository, scripts: ScriptRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
 
   def registerDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
@@ -90,6 +93,54 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       case true =>
         sensors.getLight(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
+    }
+  }
+
+  def receiveNoise(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+    devices.exists(deviceID).flatMap{
+      case true =>
+        val value: Int = (request.body \ "value").as[Int]
+        val timestamp: Long = (request.body \ "timestamp").as[Long]
+        sensors.addNoiseReading(value, deviceID, timestamp).map(_ => Ok("Noise recorded"))
+      case false => Future.successful(BadRequest("Invalid device"))
+    }
+  }
+
+  def getNoise(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+    devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
+      case true =>
+        sensors.getNoise(deviceID, page).map(t => Ok(t))
+      case false => Future.successful(BadRequest("Invalid Device"))
+    }
+  }
+
+  def addScript(script: String): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+    val parser: Parser = new Parser
+    parser.parseAll(parser.program, script) match {
+      case parser.Success(_, _) =>
+        scripts.setUserScript(request.user.userID, script).map(_ => Ok)
+      case parser.Error(msg, _) => Future.successful(BadRequest(msg))
+      case parser.Failure(msg, _) => Future.successful(BadRequest(msg))
+    }
+  }
+
+  def runScript(userID: String): Unit = {
+    val script: String = Await.result(scripts.getUserScript(userID), Duration.Inf).headOption.getOrElse("")
+    val temperature: Double = Await.result(sensors.getLatestUserTemperature(userID), Duration.Inf).headOption.getOrElse(0)
+    val humidity: Double = Await.result(sensors.getLatestUserHumidity(userID), Duration.Inf).headOption.getOrElse(0)
+    val light: Double = Await.result(sensors.getLatestUserLight(userID), Duration.Inf).headOption.getOrElse(0)
+    val noise: Int = Await.result(sensors.getLatestUserNoise(userID), Duration.Inf).headOption.getOrElse(0)
+
+    val parser: Parser = new Parser
+    parser.parseAll(parser.program, script) match {
+      case parser.Success(r: List[Statement], _) =>
+        val interpreter: Interpreter = new Interpreter(r, userID, devices, temperature, humidity, light, noise)
+        try{
+          interpreter.run()
+        }
+        catch{
+          case e: Exception => println(e.getMessage)
+        }
     }
   }
 }
