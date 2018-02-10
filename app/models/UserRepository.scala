@@ -46,41 +46,41 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     users.filter(_.userID === id).result.map { us =>
       us.headOption
     }
+  }
 
-    def idByUsername(username: String): Future[Seq[String]] = db.run {
-      users.filter(_.username === username).map(_.userID).result
+  def idByUsername(username: String): Future[Seq[String]] = db.run {
+    users.filter(_.username === username).map(_.userID).result
+  }
+
+  def isValid(username: String, password: String): Boolean = {
+    val users = Await.result(getUsers(username), Duration.Inf)
+    users.headOption match {
+      case Some(u) => BCrypt.checkpw(password, u.hash)
+      case None => false
     }
+  }
 
-    def isValid(username: String, password: String): Boolean = {
-      val users = Await.result(getUsers(username), Duration.Inf)
-      users.headOption match {
+  def getUserID(username: String): Future[String] = {
+    db.run(users.filter(_.username === username).result.headOption).map {
+      case Some(user) => user.userID
+      case None => ""
+    }
+  }
+
+  def isValidAsync(username: String, password: String): Future[Boolean] = {
+    getUsers(username).map { us =>
+      us.headOption match {
         case Some(u) => BCrypt.checkpw(password, u.hash)
         case None => false
       }
     }
+  }
 
-    def getUserID(username: String): Future[String] = {
-      db.run(users.filter(_.username === username).result.headOption).map {
-        case Some(user) => user.userID
-        case None => ""
-      }
-    }
+  def getUsers(username: String): Future[Seq[User]] = db.run {
+    users.filter(u => u.username === username).result
+  }
 
-    def isValidAsync(username: String, password: String): Future[Boolean] = {
-      getUsers(username).map { us =>
-        us.headOption match {
-          case Some(u) => BCrypt.checkpw(password, u.hash)
-          case None => false
-        }
-      }
-    }
-
-    def getUsers(username: String): Future[Seq[User]] = db.run {
-      users.filter(u => u.username === username).result
-    }
-
-    def delete(): Future[Int] = db.run {
-      users.delete
-    }
+  def delete(): Future[Int] = db.run {
+    users.delete
   }
 }
