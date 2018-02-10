@@ -6,17 +6,20 @@
 # An example controller showing a sample home page
 
 #HomeController
-GET      /                           controllers.HomeController.index
-GET      /ws                         controllers.HomeController.socketTest
+GET     /                           controllers.HomeController.index
+GET     /ws                         controllers.HomeController.socketTest
 
 #UserController
-POST     /token                      controllers.UserController.getToken
-POST     /create                     controllers.UserController.createUser
+POST    /token                      controllers.UserController.getToken
+POST    /create                     controllers.UserController.createUser
+
+#BridgeController
+GET     /bridgeWS                   controllers.BridgeController.bridgeWebSocket
 
 #SensorController
-GET      /device                     controllers.SensorController.getUserDevices
-POST     /device/:deviceID           controllers.SensorController.registerDevice(deviceID)
-DELETE   /device/:deviceID           controllers.SensorController.deleteUserDevice(deviceID)
+GET     /device                     controllers.SensorController.getUserDevices
+POST    /device/:deviceID           controllers.SensorController.registerDevice(deviceID)
+DELETE  /device/:deviceID           controllers.SensorController.deleteUserDevice(deviceID)
 
 POST    /sensor/0/:deviceID          controllers.SensorController.receiveTemperature(deviceID)
 GET     /sensor/0/:deviceID          controllers.SensorController.getTemperature(deviceID, page: Int ?= 1)

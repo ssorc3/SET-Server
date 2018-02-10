@@ -11,7 +11,7 @@ import websockets.SetWebSocket
 class BridgeController @Inject()(cc: ControllerComponents)(implicit mat: Materializer, actorSystem: ActorSystem)
   extends AbstractController(cc){
 
-  def deviceWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
+  def bridgeWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
     ActorFlow.actorRef(out => {
       SetWebSocket.props(out)
     })
