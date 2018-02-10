@@ -21,7 +21,7 @@ class HomeController @Inject()(cc: ControllerComponents, webSocketManager: WebSo
     webSocketManager.getConnection(userID) match {
       case Some(connection) => {
         connection ! "Message"
-        Ok()
+        Ok
       }
       case None => BadRequest
     }
