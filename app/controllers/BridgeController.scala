@@ -15,7 +15,7 @@ class BridgeController @Inject()(cc: ControllerComponents, auth: SecuredAuthenic
 
   def bridgeWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
     ActorFlow.actorRef(out => {
-      SetWebSocket.props(out)(devices)
+      SetWebSocket.props(out)
     })
   }
 }

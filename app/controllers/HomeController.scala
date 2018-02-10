@@ -5,6 +5,7 @@ import javax.inject.Inject
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.JWTUtil
+import models.DeviceRepository
 import play.api.libs.json.Json
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
@@ -12,7 +13,7 @@ import websockets.{SetWebSocket, WebSocketManager}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
+class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, implicit val devices: DeviceRepository)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
     Ok("Hello, World!")
   }
