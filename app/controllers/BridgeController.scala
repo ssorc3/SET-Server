@@ -10,7 +10,9 @@ import play.api.libs.streams.ActorFlow
 import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
 import websockets.SetWebSocket
 
-class BridgeController @Inject()(cc: ControllerComponents, auth: SecuredAuthenicator, implicit val devices: DeviceRepository)(implicit mat: Materializer, actorSystem: ActorSystem)
+import scala.concurrent.ExecutionContext
+
+class BridgeController @Inject()(cc: ControllerComponents, auth: SecuredAuthenicator, implicit val devices: DeviceRepository)(implicit mat: Materializer, actorSystem: ActorSystem, ec: ExecutionContext)
   extends AbstractController(cc){
 
   def bridgeWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
