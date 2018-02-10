@@ -33,24 +33,4 @@ class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil)(impli
       SetWebSocket.props(out)
     )
   }
-
-  def deviceWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
-    ActorFlow.actorRef(out => {
-      SetWebSocket.props(out)
-    })
-  }
-
-  def secureSocketTest: WebSocket = WebSocket.acceptOrResult[String, String]{ implicit request =>
-    Future.successful(request.headers.get("jw_token") match {
-      case Some(token) =>
-        val payload = Json.parse(jwtUtil.decodePayload(token).getOrElse(""))
-        (payload \ "userID").asOpt[String] match {
-          case Some(s) => Right(ActorFlow.actorRef(out => {
-            WebSocketManager.AddConnection(s, out)
-            SetWebSocket.props(out)
-          }))
-        }
-      case None => Left(BadRequest)
-    })
-  }
 }
