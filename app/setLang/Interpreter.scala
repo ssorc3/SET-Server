@@ -5,9 +5,11 @@ import setLang.model._
 import websockets.WebSocketManager
 import akka.actor._
 
+import scala.concurrent.ExecutionContext
+
 class Interpreter(program: List[Statement], userID: String, devices: DeviceRepository,
                   temperatureValue: Double, humidityValue: Double,
-                  lightValue: Double, noiseValue: Int)
+                  lightValue: Double, noiseValue: Int)(implicit ec: ExecutionContext)
 {
   def run(): Unit = {
     for (statement: Statement <- program) {
