@@ -5,7 +5,7 @@ CREATE TABLE bridges(
 
 CREATE TABLE scripts(
   userID VARCHAR(120),
-  script MEDIUMTEXT
+  script LONGTEXT
 );
 
 CREATE TABLE noise(
