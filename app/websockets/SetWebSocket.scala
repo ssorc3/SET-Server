@@ -6,7 +6,10 @@ class SetWebSocket(out: ActorRef) extends Actor
 {
   override def receive: Receive = {
     case msg: String =>
-      out ! ""
+      if(msg.startsWith("DEVICEID: "))
+      {
+        WebSocketManager.AddConnection(msg.substring(10), out)
+      }
   }
 }
 

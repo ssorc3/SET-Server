@@ -12,13 +12,13 @@ import websockets.{SetWebSocket, WebSocketManager}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HomeController @Inject()(cc: ControllerComponents, webSocketManager: WebSocketManager, jwtUtil: JWTUtil)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
+class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
     Ok("Hello, World!")
   }
 
   def test(userID: String) = Action{
-    webSocketManager.getConnection(userID) match {
+    WebSocketManager.getConnection(userID) match {
       case Some(connection) => {
         connection ! "Message"
         Ok
@@ -31,6 +31,12 @@ class HomeController @Inject()(cc: ControllerComponents, webSocketManager: WebSo
     ActorFlow.actorRef(out =>
       SetWebSocket.props(out)
     )
+  }
+
+  def deviceWebSocket: WebSocket = WebSocket.accept[String, String]{implicit request =>
+    ActorFlow.actorRef(out => {
+      SetWebSocket.props(out)
+    })
   }
 
   def secureSocketTest: WebSocket = WebSocket.acceptOrResult[String, String]{ implicit request =>
