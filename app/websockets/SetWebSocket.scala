@@ -9,6 +9,7 @@ class SetWebSocket(out: ActorRef) extends Actor
       if(msg.startsWith("DEVICEID: "))
       {
         WebSocketManager.AddConnection(msg.substring(10), out)
+        out ! "Stored your connection with deviceID: " + msg.substring(10)
       }
   }
 }

@@ -9,7 +9,7 @@
 GET      /                           controllers.HomeController.index
 GET      /ws                         controllers.HomeController.socketTest
 GET      /wss                        controllers.HomeController.deviceWebSocket
-GET      /test                       controllers.HomeController.test(userID: String)
+GET      /test                       controllers.HomeController.test(deviceID: String)
 
 #UserController
 POST     /token                      controllers.UserController.getToken

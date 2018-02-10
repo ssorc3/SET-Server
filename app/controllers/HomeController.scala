@@ -17,9 +17,10 @@ class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil)(impli
     Ok("Hello, World!")
   }
 
-  def test(userID: String) = Action{
-    WebSocketManager.getConnection(userID) match {
+  def test(deviceID: String) = Action{
+    WebSocketManager.getConnection(deviceID) match {
       case Some(connection) => {
+        println("Sending message to " + deviceID)
         connection ! "Message"
         Ok
       }
