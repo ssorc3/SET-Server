@@ -3,7 +3,9 @@ package websockets
 import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import models.DeviceRepository
 
-class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository) extends Actor
+import scala.concurrent.ExecutionContext
+
+class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository, ec: ExecutionContext) extends Actor
 {
   var bridgeID = ""
 
@@ -35,5 +37,5 @@ class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository) extends Ac
 }
 
 object SetWebSocket {
-  def props(out: ActorRef)(implicit devices: DeviceRepository): Props = Props(new SetWebSocket(out))
+  def props(out: ActorRef)(implicit devices: DeviceRepository, ec: ExecutionContext): Props = Props(new SetWebSocket(out))
 }
