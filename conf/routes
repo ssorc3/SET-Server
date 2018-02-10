@@ -8,7 +8,7 @@
 #HomeController
 GET      /                           controllers.HomeController.index
 GET      /ws                         controllers.HomeController.socketTest
-GET      /wss                        controllers.HomeControllers.secureSocketTest
+GET      /wss                        controllers.HomeController.secureSocketTest
 GET      /test                       controllers.HomeController.test(userID: String)
 
 #UserController
