@@ -52,10 +52,10 @@ Sample Response:<br>
 Requires User Token<br>
 
 ## Device Types
-0 - temperature
-1 - humidity
-2 - light
-3 - noise
+0 - temperature<br>
+1 - humidity<br>
+2 - light<br>
+3 - noise<br>
 
 ### Send Sensor Data:
 `POST /sensors/(sensorType)/(deviceID)`<br>
