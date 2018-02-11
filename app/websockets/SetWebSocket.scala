@@ -1,7 +1,7 @@
 package websockets
 
 import akka.actor.{Actor, ActorRef, PoisonPill, Props}
-import models.DeviceRepository
+import repositories.DeviceRepository
 
 import scala.concurrent.ExecutionContext
 

@@ -3,9 +3,9 @@ package controllers
 import javax.inject.Inject
 
 import auth.SecuredAuthenticator
-import models.ScriptRepository
 import play.api.libs.json.JsValue
 import play.api.mvc.{AbstractController, Action, ControllerComponents}
+import repositories.ScriptRepository
 import setLang.Parser
 
 import scala.concurrent.{ExecutionContext, Future}

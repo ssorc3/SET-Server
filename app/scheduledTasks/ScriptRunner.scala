@@ -3,8 +3,8 @@ package scheduledTasks
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import models.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
 import play.api.inject._
+import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
 import setLang.{Interpreter, Parser}
 import setLang.model.Statement
 

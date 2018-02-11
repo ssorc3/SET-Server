@@ -4,9 +4,9 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenticator
 import com.google.inject.Singleton
-import models.{DeviceRepository, ScriptRepository, SensorDataRepository}
 import play.api.libs.json.JsValue
 import play.api.mvc._
+import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository}
 import setLang.model.Statement
 import setLang.{Interpreter, Parser}
 

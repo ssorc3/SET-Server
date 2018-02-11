@@ -5,9 +5,9 @@ import javax.inject.Inject
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.SecuredAuthenticator
-import models.DeviceRepository
 import play.api.libs.streams.ActorFlow
 import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
+import repositories.DeviceRepository
 import websockets.SetWebSocket
 
 import scala.concurrent.ExecutionContext

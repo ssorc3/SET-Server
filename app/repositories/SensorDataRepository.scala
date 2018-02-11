@@ -1,7 +1,8 @@
-package models
+package repositories
 
 import javax.inject.Inject
 
+import models.{HumidityData, LightData, NoiseData, TemperatureData}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 

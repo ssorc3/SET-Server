@@ -1,9 +1,9 @@
 package setLang
 
-import models.DeviceRepository
 import setLang.model._
 import websockets.WebSocketManager
 import akka.actor._
+import repositories.DeviceRepository
 
 import scala.concurrent.ExecutionContext
 

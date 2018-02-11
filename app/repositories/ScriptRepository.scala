@@ -1,7 +1,8 @@
-package models
+package repositories
 
 import javax.inject.Inject
 
+import models.Script
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 

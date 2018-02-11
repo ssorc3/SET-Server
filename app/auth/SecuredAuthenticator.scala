@@ -2,9 +2,9 @@ package auth
 
 import javax.inject.Inject
 
-import models.UserRepository
 import play.api.mvc._
 import play.api.libs.json.{Json, OFormat}
+import repositories.UserRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 

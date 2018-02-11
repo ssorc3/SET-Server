@@ -5,10 +5,10 @@ import javax.inject.Inject
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.JWTUtil
-import models.DeviceRepository
 import play.api.libs.json.Json
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
+import repositories.DeviceRepository
 import websockets.{SetWebSocket, WebSocketManager}
 
 import scala.concurrent.{ExecutionContext, Future}

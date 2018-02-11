@@ -1,9 +1,10 @@
-package models
+package repositories
 
 import java.util.UUID
 import javax.inject.Inject
 
 import auth.JWTUtil
+import models.User
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json

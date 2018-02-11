@@ -3,14 +3,11 @@ package controllers
 import javax.inject._
 
 import auth._
-
-import models.UserRepository
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
+import repositories.UserRepository
 
 import scala.concurrent.{ExecutionContext, Future}
-
-case class CreateUserForm(username: String, password: String)
 
 @Singleton
 class UserController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, repo: UserRepository)(implicit ec: ExecutionContext) extends AbstractController(cc)
