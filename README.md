@@ -2,7 +2,6 @@
 
 ## User
 ### Create User: 
-<br>
 `POST /create`<br>
 Sample Request:<br>
 ```
@@ -14,7 +13,6 @@ Sample Request:<br>
 returns token<br>
   
 ### Get User Token:
-<br>
 `POST /token`<br>
 Sample Request:<br>
 ```
@@ -27,7 +25,6 @@ returns token for existing user<br>
 
 ## Devices
 ### Register a new device: 
-<br>
 `POST /device/(deviceID)`<br>
 Sample Request:<br>
 ```
@@ -38,17 +35,14 @@ Sample Request:<br>
 Requires User Token<br>
 
 ### Delete device:
-<br>
 `DELETE /device/(deviceID)`<br>
 Requires User Token<br>
 
 ### Get user devices:
-<br>
 `GET /device`<br>
 Requires User Token<br>
 
 ### Send Temperature Data:
-<br>
 `POST /sensors/0/(deviceID)`<br>
 Sample Request:<br>
 ```
@@ -59,7 +53,6 @@ Sample Request:<br>
 <br>
 
 ### Send Humidity Data:
-<br>
 `POST /sensors/1/(deviceID)`<br>
 Sample Request:<br>
 ```
@@ -70,7 +63,6 @@ Sample Request:<br>
 <br>
 
 ### Send Light Data:
-<br>
 `POST /sensors/2/(deviceID)`<br>
 Sample Request:<br>
 ``` 
@@ -82,7 +74,6 @@ Sample Request:<br>
 
 ## Scripts
 ### Set a user's script:
-<br>
 `POST /script` <br>
 Sample Request:<br>
 ```
@@ -92,7 +83,8 @@ Sample Request:<br>
 ```
 requires user token<br>
 
-### Remove a user's script: `DELETE /script`<br>
+### Remove a user's script: 
+`DELETE /script`<br>
 requires user token<br>
 
 ## Bridges
