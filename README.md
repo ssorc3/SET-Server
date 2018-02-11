@@ -1,48 +1,71 @@
 # SET-Server
 
-Create User: POST /create
-Sample Request:
+Create User: <br>
+`POST /create`<br>
+Sample Request:<br>
+```
 {
   "username": "Test",
   "password": "test"
 }
-returns token
+```
+returns token<br>
   
-Get User Token: POST /token
-Sample Request:
+Get User Token: <br>
+`POST /token`<br>
+Sample Request:<br>
+```
 {
   "username": "Test",
   "password": "test"
 }
-returns token for existing user
+```
+returns token for existing user<br>
 
-Register a new device: POST /device/(deviceID)
-Sample Request:
+Register a new device: <br>
+`POST /device/(deviceID)`<br>
+Sample Request:<br>
+```
 {
   "deviceName": "Living room alarm"
 }
-Requires User Token
+```
+Requires User Token<br>
 
-Delete device: DELETE /device/(deviceID)
-Requires User Token
+Delete device: <br>
+`DELETE /device/(deviceID)`<br>
+Requires User Token<br>
 
-Get user devices: GET /device
-Requires User Token
+Get user devices: <br>
+`GET /device`<br>
+Requires User Token<br>
 
-Send Temperature Data: POST /sensors/0/(deviceID)
-Sample Request:
+Send Temperature Data: <br>
+`POST /sensors/0/(deviceID)`<br>
+Sample Request:<br>
+```
 {
   "value": 20.0
 }
+```
+<br>
 
-Send Humidity Data: POST /sensors/1/(deviceID)
-Sample Request:
+Send Humidity Data: <br>
+`POST /sensors/1/(deviceID)`<br>
+Sample Request:<br>
+```
 {
   "value": 60.0
 }
+```
+<br>
 
-Send Light Data: POST /sensors/2/(deviceID)
-Sample Request:
+Send Light Data: <br>
+`POST /sensors/2/(deviceID)`<br>
+Sample Request:<br>
+``` 
 {
   "value": 14.0
 }
+```
+<br>
