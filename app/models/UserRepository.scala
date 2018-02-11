@@ -38,7 +38,7 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     ))))
   }
 
-  def list(): Future[Seq[User]] = db.run {
+  def list: Future[Seq[User]] = db.run {
     users.result
   }
 

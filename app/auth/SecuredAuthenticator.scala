@@ -13,7 +13,7 @@ case class UserInfo(username: String, userID: String)
 
 case class UserRequest[A](user: UserInfo, request: Request[A]) extends WrappedRequest(request)
 
-class SecuredAuthenicator @Inject()(jwtUtil: JWTUtil, repo: UserRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class SecuredAuthenticator @Inject()(jwtUtil: JWTUtil, repo: UserRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   implicit val formatUser: OFormat[User] = Json.format[User]
 
