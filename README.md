@@ -32,7 +32,7 @@ Sample Request:<br>
   "deviceName": "Living room alarm"
 }
 ```
-Requires User Token<br>
+requires User Token<br>
 
 ### Delete device:
 `DELETE /device/(deviceID)`<br>
@@ -40,10 +40,19 @@ Requires User Token<br>
 
 ### Get user devices:
 `GET /device`<br>
+Sample Response:<br>
+```
+[
+  {
+    "deviceID": "deviceid",
+    "deviceName": "deviceName"
+  }
+]
+```
 Requires User Token<br>
 
-### Send Temperature Data:
-`POST /sensors/0/(deviceID)`<br>
+### Send Sensor Data:
+`POST /sensors/(sensorType)/(deviceID)`<br>
 Sample Request:<br>
 ```
 {
@@ -52,25 +61,18 @@ Sample Request:<br>
 ```
 <br>
 
-### Send Humidity Data:
-`POST /sensors/1/(deviceID)`<br>
-Sample Request:<br>
+### Get Sensor Data:
+`GET /sensors/(sensorType)/(deviceID)`<br>
+Sample Response:<br>
 ```
-{
-  "value": 60.0
-}
+[
+  {
+    "id": 0,
+    "value": 0,
+    "timestamp": 0
+  }
+]
 ```
-<br>
-
-### Send Light Data:
-`POST /sensors/2/(deviceID)`<br>
-Sample Request:<br>
-``` 
-{
-  "value": 14.0
-}
-```
-<br>
 
 ## Scripts
 ### Set a user's script:
