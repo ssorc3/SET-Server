@@ -31,6 +31,6 @@ POST    /sensor/1/:deviceID         controllers.SensorController.receiveHumidity
 GET     /sensor/1/:deviceID         controllers.SensorController.getHumidity(deviceID, page: Int ?= 1)
 POST    /sensor/2/:deviceID         controllers.SensorController.receiveLight(deviceID)
 GET     /sensor/2/:deviceID         controllers.SensorController.getLight(deviceID, page: Int ?= 1)
-POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(deviceID, page: Int ?= 1)
-GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID)
+POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(deviceID)
+GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
 
