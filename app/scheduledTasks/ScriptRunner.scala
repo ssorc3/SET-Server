@@ -3,14 +3,13 @@ package scheduledTasks
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
-import play.api.Logger
 import play.api.inject._
 import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
 import setLang.{Interpreter, Parser}
 import setLang.model.Statement
 import websockets.WebSocketManager
 
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
 
 class ScriptTask extends SimpleModule(bind[ScriptRunner].toSelf.eagerly())
@@ -20,12 +19,7 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
   actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 10.seconds) {
     users.list.map{u =>
       u.foreach(x => runScript(x.userID))
-      u.foreach(x => devices.getUserBridges(x.userID).map{b =>
-        b.foreach(s => WebSocketManager.getConnection(s) match {
-          case Some(actor) => actor ! "heartbeat"
-          case None =>
-        })
-      })
+      WebSocketManager.getConnections().foreach(x => x._2 ! "heartbeat")
     }
   }
 
