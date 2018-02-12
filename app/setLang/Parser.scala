@@ -21,13 +21,11 @@ class Parser extends StandardTokenParsers
   def andCondition: Parser[Condition] = orCondition ~ opt("&" ~ condition) ^^ {
                                           case a ~ Some("&" ~ b) => AndCondition(a, b)
                                           case a ~ None => a
-                                          case _ => BaseCondition("", "", 0)
                                         }
 
   def orCondition: Parser[Condition] = baseCondition ~ opt("|" ~ condition) ^^ {
                                           case a ~ Some("|" ~ b) => OrCondition(a, b)
                                           case a ~ None => a
-                                          case _ => BaseCondition("", "", 0)
                                         }
 
   def baseCondition: Parser[Condition] = sensorType ~ operator ~ numericLit ^^ {case a ~ b ~ c => BaseCondition(b, a, c.toInt)}

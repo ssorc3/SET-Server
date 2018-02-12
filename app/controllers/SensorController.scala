@@ -52,7 +52,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getTemperature(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getTemperature(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getTemperatures(deviceID, page).map(t => Ok(t))
