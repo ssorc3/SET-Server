@@ -33,3 +33,7 @@ POST    /sensor/2/:deviceID         controllers.SensorController.receiveLight(de
 GET     /sensor/2/:deviceID         controllers.SensorController.getLight(deviceID, page: Int ?= 1)
 POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(deviceID)
 GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
+
+#ActuatorController
+POST    /actuator/kettle            controllers.ActuatorController.setKettleIP
+POST    /actuator/lights            controllers.ActuatorController.setLightIP
