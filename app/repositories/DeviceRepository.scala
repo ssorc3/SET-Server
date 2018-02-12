@@ -62,7 +62,7 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
   }
 
   def getUserBridges(userID: String): Future[Seq[String]] = db.run {
-    devices.filter(_.userID === userID).join(bridges).on(_.deviceID === _.deviceID).map(_._2.deviceID).result
+    devices.filter(_.userID === userID).join(bridges).on(_.deviceID === _.deviceID).map(_._2.deviceID.?).result
   }
 
   def removeBridge(deviceID: String): Future[Any] = db.run {
