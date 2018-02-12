@@ -50,7 +50,7 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
 
   class BridgeTable(tag: Tag) extends Table[Bridge](tag, "bridges")
   {
-    def deviceID = column[String]("deviceID", O.PrimaryKey)
+    def deviceID = column[String]("bridgeID", O.PrimaryKey)
 
     def * = deviceID <> (Bridge.apply, Bridge.unapply)
   }

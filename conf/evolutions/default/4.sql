@@ -18,3 +18,4 @@ CREATE TABLE noise(
 # --- !Downs
 DROP TABLE bridges;
 DROP TABLE scripts;
+DROP TABLE noise;
