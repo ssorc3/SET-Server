@@ -17,6 +17,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       _.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) => c ! "KETTLEIP:" + kettleIP
       })
+      Ok
     }
   }
 }
