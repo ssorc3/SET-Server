@@ -52,7 +52,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getTemperature(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
+  def getTemperature(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getTemperatures(deviceID, page).map(t => Ok(t))
@@ -70,7 +70,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getHumidity(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getHumidity(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getHumidity(deviceID, page).map(t => Ok(t))
@@ -88,7 +88,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getLight(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getLight(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getLight(deviceID, page).map(t => Ok(t))
@@ -106,7 +106,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getNoise(deviceID: String, page: Int): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
+  def getNoise(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
         sensors.getNoise(deviceID, page).map(t => Ok(t))
