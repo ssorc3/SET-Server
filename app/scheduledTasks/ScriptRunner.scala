@@ -20,7 +20,12 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
   actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 10.seconds) {
     users.list.map{u =>
       u.foreach(x => runScript(x.userID))
-      WebSocketManager.getConnections().foreach(x => x._2 ! "heartbeat")
+      u.foreach(x => devices.getUserBridges(x.userID).map{b =>
+        b.foreach(s => WebSocketManager.getConnection(s) match {
+          case Some(actor) => actor ! "heartbeat"
+          case None =>
+        })
+      })
     }
   }
 
