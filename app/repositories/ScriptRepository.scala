@@ -22,8 +22,9 @@ class ScriptRepository @Inject() (protected val dbConfigProvider: DatabaseConfig
   val scripts = TableQuery[ScriptTable]
 
   def setUserScript(userID: String, script: String): Future[Any] = db.run {
-    println(script)
+    println(scripts.filter(_.userID === userID).result)
     scripts.filter(_.userID === userID).delete
+    println(scripts.filter(_.userID === userID).result)
     scripts += Script(userID, script)
   }
 
