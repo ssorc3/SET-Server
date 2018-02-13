@@ -1,6 +1,5 @@
 package setLang
 
-import setLang.model.LightCommand.LightCommand
 import setLang.model._
 
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
