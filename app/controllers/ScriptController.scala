@@ -3,8 +3,8 @@ package controllers
 import javax.inject.Inject
 
 import auth.SecuredAuthenticator
-import play.api.libs.json.JsValue
-import play.api.mvc.{AbstractController, Action, ControllerComponents}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.ScriptRepository
 import setLang.Parser
 
@@ -26,6 +26,15 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
   def removeScript(): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     scripts.setUserScript(request.user.userID, "").map{ _ =>
       Ok
+    }
+  }
+
+  def getScript: Action[AnyContent] = auth.JWTAuthentication.async(parse.default){ implicit request =>
+    scripts.getUserScript(request.user.userID).map{ s =>
+      s.headOption match {
+        case Some(script) => Ok("script" -> script)
+        case None => NoContent
+      }
     }
   }
 }
