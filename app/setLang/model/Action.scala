@@ -14,6 +14,6 @@ case class LightSetting(isWhite: Boolean, hue: Int, brightness: Int) extends Act
 object LightCommand extends Enumeration{
   type LightCommand = Value
 
-  def ON: Value = Value
-  def OFF: Value = Value
+  def ON: Value = Value("on")
+  def OFF: Value = Value("off")
 }
