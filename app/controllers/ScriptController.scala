@@ -16,7 +16,8 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
     val script = (request.body \ "script").asOpt[String].getOrElse("")
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
-      case parser.Success(_, _) =>
+      case parser.Success(r, _) =>
+        println("Successfully parsed: " + script + "\nas: " + r)
         scripts.setUserScript(request.user.userID, script).map(_ => Ok)
       case parser.Error(msg, _) => Future.successful(BadRequest(msg))
       case parser.Failure(msg, _) => Future.successful(BadRequest(msg))
