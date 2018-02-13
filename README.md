@@ -116,11 +116,20 @@ if(temperature > 10 & humidity > 10 & light > 10 & noise > 10) then
   text;
   notification;
   kettle;
-  lights true, 200, 20;
+  lights on;
+  lightSetting true, 200, 20;
 end
 ```
 
+<br>
+
 lights command has parameters:
+<ul>
+  <li>on</li>
+  <li>off</li>
+</ul>
+
+lightSetting command has parameters:
 <ul>
   <li>isWhite: true,  false</li>
   <li>hue: Color as a hue value between 0 and 255</li>
