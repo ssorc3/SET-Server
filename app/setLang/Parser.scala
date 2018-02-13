@@ -1,12 +1,13 @@
 package setLang
 
+import setLang.model.LightCommand.LightCommand
 import setLang.model._
 
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class Parser extends StandardTokenParsers
 {
-  lexical.reserved += ("temperature", "humidity", "light", "noise", "end", "if", "then", "on", "off", "dim", "email", "text", "notification", "lights", "kettle", "true", "false")
+  lexical.reserved += ("temperature", "humidity", "light", "lightSetting", "noise", "end", "if", "then", "on", "off", "email", "text", "notification", "lights", "kettle", "true", "false")
   lexical.delimiters += (">", "<", ">=", "<=", "==", "&", "|", "(", ")", ";")
 
   def program: Parser[List[Statement]] = rep(stmt)
@@ -29,9 +30,9 @@ class Parser extends StandardTokenParsers
 
   def baseCondition: Parser[Condition] = sensorType ~ operator ~ numericLit ^^ {case a ~ b ~ c => BaseCondition(b, a, c.toInt)}
 
-  def sensorType: Parser[String] = "temperature" |
-                                    "humidity"   |
-                                    "light"      |
+  def sensorType: Parser[String] = "temperature"   |
+                                    "humidity"     |
+                                    "light"        |
                                     "noise"
 
   def operator: Parser[String] = ">"   |
@@ -44,8 +45,12 @@ class Parser extends StandardTokenParsers
                                 "text"  ^^^ Text()                           |
                                 "notification" ^^^ Notification()            |
                                 "kettle" ^^^ Kettle()                        |
-                                ("lights" ~> bool) ~ (", " ~> numericLit) ~ (", " ~> numericLit) ^^ {case a ~ b ~ c => Lights(a, b.toInt, c.toInt)}
+                                "lightSetting" ~> lightCommand ^^^ {case a => Lights(a)}                |
+                                ("lightSetting" ~> bool) ~ (", " ~> numericLit) ~ (", " ~> numericLit) ^^ {case a ~ b ~ c => LightSetting(a, b.toInt, c.toInt)}
 
+
+  def lightCommand: Parser[LightCommand] = "on"  ^^^ LightCommand.ON   |
+                                            "off" ^^^ LightCommand.OFF
 
   def bool: Parser[Boolean] = "true" ^^^ true |
                               "false" ^^^ false
@@ -53,5 +58,4 @@ class Parser extends StandardTokenParsers
   def parseAll[T](parser: Parser[T], in: String): ParseResult[T] = {
     phrase(parser)(new lexical.Scanner(in))
   }
-
 }
