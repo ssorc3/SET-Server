@@ -45,11 +45,11 @@ class Parser extends StandardTokenParsers
                                 "text"  ^^^ Text()                           |
                                 "notification" ^^^ Notification()            |
                                 "kettle" ^^^ Kettle()                        |
-                                "lights" ~> lightSetting ^^ {a => Lights(a)}
+                                ("lights" ~> bool) ~ (", " ~> numericLit) ~ (", " ~> numericLit) ^^ {case a ~ b ~ c => Lights(a, b.toInt, c.toInt)}
 
-  def lightSetting: Parser[LightCommand] = "on"  ^^^ LightCommand.ON   |
-                                            "off" ^^^ LightCommand.OFF |
-                                            "dim" ^^^ LightCommand.DIM
+
+  def bool: Parser[Boolean] = "true" ^^^ true |
+                              "false" ^^^ false
 
   def parseAll[T](parser: Parser[T], in: String): ParseResult[T] = {
     phrase(parser)(new lexical.Scanner(in))
