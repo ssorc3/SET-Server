@@ -19,6 +19,7 @@ GET     /bridgeWS                   controllers.BridgeController.bridgeWebSocket
 #ScriptController
 POST    /script                     controllers.ScriptController.addScript
 DELETE  /script                     controllers.ScriptController.removeScript
+GET     /script                     controllers.ScriptController.getScript
 
 #SensorController
 GET     /device                     controllers.SensorController.getUserDevices
