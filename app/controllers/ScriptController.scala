@@ -32,7 +32,7 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
   def getScript: Action[AnyContent] = auth.JWTAuthentication.async(parse.default){ implicit request =>
     scripts.getUserScript(request.user.userID).map{ s =>
       s.headOption match {
-        case Some(script) => Ok("script" -> script)
+        case Some(script) => Ok(Json.obj("script" -> script))
         case None => NoContent
       }
     }
