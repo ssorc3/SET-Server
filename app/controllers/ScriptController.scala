@@ -37,4 +37,15 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
       }
     }
   }
+
+  def checkScript: Action[JsValue] = auth.JWTAuthentication(parse.json) {implicit request =>
+    val script = (request.body \ "script").asOpt[String].getOrElse("")
+    val parser: Parser = new Parser
+    parser.parseAll(parser.program, script) match {
+      case parser.Success(_, _) =>
+        Ok
+      case parser.Error(msg, _) => BadRequest(msg)
+      case _ => Ok("<h1>There's been an error with our compiler. Please try again later</h1>")
+    }
+  }
 }
