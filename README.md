@@ -98,3 +98,20 @@ requires user token<br>
 ## Bridges
 ### WebSocket
 Bridge WebSocket `ws://<ip>/bridgeWS`
+
+# SETLang
+## Example
+```
+if(temperature > 10 & humidity > 10 & light > 10 & noise > 10) then
+  email;
+  text;
+  notification;
+  kettle;
+  lights true, 200, 20;
+end
+```
+
+lights command has parameters:
+  isWhite: true,  false
+  hue: Color as a hue value between 0 and 255
+  brightness: brightness as a value between 0 and 20
