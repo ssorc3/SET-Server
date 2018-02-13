@@ -6,7 +6,7 @@ import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class Parser extends StandardTokenParsers
 {
-  lexical.reserved += ("temperature", "humidity", "light", "noise", "end", "if", "then", "on", "off", "dim", "email", "text", "notification", "lights", "kettle")
+  lexical.reserved += ("temperature", "humidity", "light", "noise", "end", "if", "then", "on", "off", "dim", "email", "text", "notification", "lights", "kettle", "true", "false")
   lexical.delimiters += (">", "<", ">=", "<=", "==", "&", "|", "(", ")", ";")
 
   def program: Parser[List[Statement]] = rep(stmt)
