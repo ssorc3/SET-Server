@@ -45,7 +45,7 @@ class Parser extends StandardTokenParsers
                                 "text"  ^^^ Text()                           |
                                 "notification" ^^^ Notification()            |
                                 "kettle" ^^^ Kettle()                        |
-                                "lights" ~> lightCommand ^^^ {case a: LightCommand => Lights(a)}                |
+                                "lights" ~> lightCommand ^^ {a => Lights(a)} |
                                 ("lightSetting" ~> bool) ~ (", " ~> numericLit) ~ (", " ~> numericLit) ^^ {case a ~ b ~ c => LightSetting(a, b.toInt, c.toInt)}
 
 
