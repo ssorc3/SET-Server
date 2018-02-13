@@ -91,6 +91,15 @@ Sample Request:<br>
 ```
 requires user token<br>
 
+### Get a user's script:
+`GET /script` <br>
+Sample Response:<br>
+```
+{
+  "script": "if(temperature < 20 & noise > 400) then kettle; end"
+}
+```
+
 ### Remove a user's script: 
 `DELETE /script`<br>
 requires user token<br>
