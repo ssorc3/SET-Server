@@ -112,6 +112,7 @@ end
 ```
 
 lights command has parameters:
-  isWhite: true,  false
-  hue: Color as a hue value between 0 and 255
-  brightness: brightness as a value between 0 and 20
+<ul>
+  <li>isWhite: true,  false</li>
+  <li>hue: Color as a hue value between 0 and 255</li>
+  <li>brightness: brightness as a value between 0 and 20</li>
