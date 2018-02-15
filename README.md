@@ -102,7 +102,26 @@ Sample Response:<br>
 
 ### Remove a user's script: 
 `DELETE /script`<br>
+returns OK<br>
 requires user token<br>
+
+## Actuators
+### Kettle
+`POST /actuators/kettle`<br>
+returns OK
+
+### Lights
+`POST /actuators/lights` <br>
+Sample request:
+```
+{
+  "isWhite": false,
+  "hue": 255,
+  "brightness": 255
+}
+```
+returns OK<br>
+requires Token
 
 ## Bridges
 ### WebSocket
