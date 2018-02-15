@@ -35,7 +35,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
             case LightSetting(isWhite, hue, brightness) => {
               devices.getUserBridges(userID).map(_.foreach(b => {
                 WebSocketManager.getConnection(b) match {
-                  case Some(c) => c ! "lightSetting " + isWhite  + ", " + hue + ", " + brightness
+                  case Some(c) => c ! "lightSetting " + isWhite  + " " + hue + " " + brightness
                 }
               }))
             }
