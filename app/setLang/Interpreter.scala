@@ -29,6 +29,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
               devices.getUserBridges(userID).map(_.foreach(b => {
                 WebSocketManager.getConnection(b) match {
                   case Some(c) => c ! "kettle"
+                  case _ =>
                 }
               }))
             }
@@ -36,6 +37,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
               devices.getUserBridges(userID).map(_.foreach(b => {
                 WebSocketManager.getConnection(b) match {
                   case Some(c) => c ! "lightSetting " + isWhite  + " " + hue + " " + brightness
+                  case _ =>
                 }
               }))
             }
@@ -43,6 +45,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
               devices.getUserBridges(userID).map(_.foreach(b => {
                 WebSocketManager.getConnection(b) match {
                   case Some(c) => c ! "lights " + command
+                  case _ =>
                 }
               }))
             }

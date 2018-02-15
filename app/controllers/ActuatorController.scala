@@ -17,6 +17,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     devices.getUserBridges(userID).map{x =>
       x.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) => c ! "KETTLEIP:" + kettleIP
+        case _ =>
       })
       Ok
     }
