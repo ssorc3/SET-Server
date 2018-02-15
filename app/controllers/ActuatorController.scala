@@ -30,8 +30,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     devices.getUserBridges(userID).map{x =>
       x.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) =>
-          c ! "LIGHTIP:" + lightIP
-          c ! "LIGHTMAC:" + lightMac
+          c ! "LIGHTIP: " + lightIP + " " + lightMac
       })
       Ok
     }
