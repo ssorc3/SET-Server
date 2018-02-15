@@ -23,6 +23,18 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     }
   }
 
+  def boilKettle(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
+    val userID = request.user.userID
+    devices.getUserBridges(userID).map {x =>
+      x.foreach(b => WebSocketManager.getConnection(b) match {
+        case Some(c) =>
+          c ! "kettle"
+        case _ =>
+      })
+      Ok
+    }
+  }
+
   def setLightIP(): Action[JsValue] = auth.JWTAuthentication.async(parse.json){ implicit request =>
     val userID = request.user.userID
     val lightIP: String = (request.body \ "ip").asOpt[String].getOrElse("")
@@ -31,6 +43,22 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       x.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) =>
           c ! "LIGHTIP: " + lightIP + " " + lightMac
+        case _ =>
+      })
+      Ok
+    }
+  }
+
+  def setLights(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
+    val userID = request.user.userID
+    val isWhite: Boolean = (request.body \ "isWhite").asOpt[Boolean].getOrElse(false)
+    val hue: Int = (request.body \ "hue").asOpt[Int].getOrElse(255)
+    val brightness: Int = (request.body \ "brightness").asOpt[Int].getOrElse(255)
+    devices.getUserBridges(userID).map {x =>
+      x.foreach(b => WebSocketManager.getConnection(b) match {
+        case Some(c) =>
+          c ! "lightSetting " + isWhite + " " + hue  + " " + brightness
+        case _ =>
       })
       Ok
     }
