@@ -8,7 +8,7 @@ import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 class Parser extends StandardTokenParsers
 {
   lexical.reserved += ("temperature", "humidity", "light", "lightSetting", "noise", "end", "if", "then", "on", "off", "email", "text", "notification", "lights", "kettle", "true", "false")
-  lexical.delimiters += (">", "<", ">=", "<=", "==", "&", "|", "(", ")", ";", ",")
+  lexical.delimiters += (">", "<", ">=", "<=", "==", "!=", "&", "|", "(", ")", ";", ",")
 
   def program: Parser[List[Statement]] = rep(stmt)
 
@@ -39,7 +39,8 @@ class Parser extends StandardTokenParsers
                                   "<"  |
                                   ">=" |
                                   "<=" |
-                                  "=="
+                                  "==" |
+                                  "!="
 
   def action: Parser[Action] = "email"  ^^^ Email()                          |
                                 "text"  ^^^ Text()                           |

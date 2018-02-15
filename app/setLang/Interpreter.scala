@@ -79,6 +79,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
           case "<=" => sensorValue <= threshold
           case ">=" => sensorValue >= threshold
           case "==" => sensorValue == threshold
+          case "!=" => sensorValue != threshold
         }
     }
   }
