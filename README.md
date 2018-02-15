@@ -107,11 +107,11 @@ requires user token<br>
 
 ## Actuators
 ### Kettle
-`POST /actuators/kettle`<br>
+`POST /actuator/kettle`<br>
 returns OK
 
 ### Lights
-`POST /actuators/lights` <br>
+`POST /actuator/lights` <br>
 Sample request:
 ```
 {
