@@ -35,7 +35,9 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       {
           Ok("There is a problem connecting to your bridge")
       }
-      Ok
+      else {
+        Ok
+      }
     }
   }
 
