@@ -20,6 +20,7 @@ class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository, ec: Execut
           case _ =>
         }
         out ! "Stored your connection with bridgeID: " + bridgeID
+        out ! WebSocketManager.getConnections()
       }
       else {
         if(bridgeID.isEmpty)
