@@ -31,6 +31,10 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
           c ! "kettle"
         case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
+      if(x.isEmpty)
+      {
+          Ok("There is a problem connecting to your bridge")
+      }
       Ok
     }
   }
