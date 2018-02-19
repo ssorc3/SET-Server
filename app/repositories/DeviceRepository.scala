@@ -42,6 +42,7 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     val device = devices.filter(d => d.userID === userID && d.deviceID === deviceID)
     db.run(device.exists.result).flatMap {
       case true => db.run{
+        deleteBridges(deviceID, userID)
         device.delete
       }.map(_ => true)
       case false => Future(false)
@@ -59,6 +60,10 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
 
   def setAsBridge(deviceID: String): Future[Any] = db.run {
     bridges += Bridge(deviceID)
+  }
+
+  def deleteBridges(deviceID: String, userID: String) = db.run{
+    bridges.filter(b => b.deviceID === deviceID).delete
   }
 
   def getUserBridges(userID: String): Future[Seq[String]] = db.run {
