@@ -17,7 +17,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     devices.getUserBridges(userID).map{x =>
       x.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) => c ! "KETTLEIP:" + kettleIP
-        case _ =>
+        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
       Ok
     }
@@ -29,7 +29,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
           c ! "kettle"
-        case _ =>
+        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
       Ok
     }
@@ -43,7 +43,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       x.foreach(b => WebSocketManager.getConnection(b) match{
         case Some(c) =>
           c ! "LIGHTIP: " + lightIP + " " + lightMac
-        case _ =>
+        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
       Ok
     }
@@ -58,7 +58,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
           c ! "lightSetting " + isWhite + " " + hue  + " " + brightness
-        case _ =>
+        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
       Ok
     }

@@ -17,11 +17,12 @@ class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository, ec: Execut
         WebSocketManager.AddConnection(bridgeID, out)
         devices.isBridge(bridgeID).map{
           case false => devices.setAsBridge(bridgeID)
+          case _ =>
         }
         out ! "Stored your connection with bridgeID: " + bridgeID
       }
       else {
-        if(bridgeID == "")
+        if(bridgeID.isEmpty)
         {
           out ! "Invalid Protocol: Start communication with \"BRIDGEID: <BRIDGEID>\""
           out ! PoisonPill
@@ -31,7 +32,7 @@ class SetWebSocket(out: ActorRef)(implicit devices: DeviceRepository, ec: Execut
 
   override def postStop(): Unit = {
     super.postStop()
-    if(bridgeID != "")
+    if(!bridgeID.isEmpty)
       WebSocketManager.removeConnection(bridgeID)
   }
 }
