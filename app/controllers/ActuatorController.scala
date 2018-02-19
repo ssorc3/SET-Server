@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import auth.SecuredAuthenticator
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.DeviceRepository
 import websockets.WebSocketManager
@@ -25,7 +25,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
 
   def boilKettle(): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
     val userID = request.user.userID
-    devices.getUserBridges(userID).map{Ok(_)}
+    devices.getUserBridges(userID).map{Ok(Json.toJsObject(_)}
     devices.getUserBridges(userID).map {x =>
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
