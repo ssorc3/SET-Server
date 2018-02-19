@@ -62,12 +62,12 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     bridges += Bridge(deviceID)
   }
 
-  def deleteBridges(deviceID: String, userID: String) = db.run{
+  def deleteBridges(deviceID: String, userID: String): Future[Any] = db.run{
     bridges.filter(b => b.deviceID === deviceID).delete
   }
 
   def getUserBridges(userID: String): Future[Seq[String]] = db.run {
-    devices.filter(_.userID === userID).join(bridges).on((u, b) => u.deviceID === b.deviceID).map(_._2.deviceID).result
+    devices.filter(_.userID === userID).join(bridges).on((u, b) => u.deviceID === b.deviceID).map(_._1.deviceID).result
   }
 
   def removeBridge(deviceID: String): Future[Any] = db.run {
