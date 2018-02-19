@@ -26,6 +26,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
               //Can't do notifications yet
             }
             case Kettle() => {
+              devices.getUserBridges(userID).map(x => x.foreach(print))
               devices.getUserBridges(userID).map(_.foreach(b => {
                 WebSocketManager.getConnection(b) match {
                   case Some(c) => c ! "kettle"
