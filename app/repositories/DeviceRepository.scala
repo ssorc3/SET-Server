@@ -71,6 +71,7 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
       device <- devices if device.userID === userID
       bridge <- bridges if device.deviceID === bridge.deviceID
     } yield bridge.deviceID
+    println(ids.result.statements.head)
     db.run(ids.result)
   }
 
