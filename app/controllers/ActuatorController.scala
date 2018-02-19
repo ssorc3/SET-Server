@@ -26,7 +26,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
   def boilKettle(): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
     val userID = request.user.userID
     devices.getUserBridges(userID).map {x =>
-      print(x)
+      x.foreach(print)
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
           c ! "kettle"
