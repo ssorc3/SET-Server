@@ -38,6 +38,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
   def boilKettleAssistant(): Action[JsValue] = Action(parse.json) {implicit request =>
     val userID = (request.body \ "userID").asOpt[String].getOrElse("")
     devices.getUserBridges(userID).map {x =>
+      if(x.isEmpty) Ok("No bridges for user " + userID)
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
           c ! "kettle"
