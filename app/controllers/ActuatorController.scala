@@ -44,7 +44,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
         case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
     }
-    Ok
+    Ok("Boiling kettle for " + userID)
   }
 
   def setLightIP(): Action[JsValue] = auth.JWTAuthentication.async(parse.json){ implicit request =>
