@@ -33,6 +33,8 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
     temperatures.filter(_.deviceID === deviceID).sortBy(_.timestamp.desc).drop(10*(page-1)).take(10).result
   }
 
+
+
   def getLatestUserTemperature(userID: String): Future[Seq[Double]] = db.run {
     devices.devices.filter(_.userID === userID).join(temperatures).on(_.deviceID === _.deviceID).sortBy(_._2.timestamp.desc).take(1).map(_._2.value).result
   }

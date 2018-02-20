@@ -57,6 +57,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     devices.getUserBridges(userID).map {x =>
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
+          c ! "lights on"
           c ! "lightSetting " + isWhite + " " + hue  + " " + brightness
         case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
