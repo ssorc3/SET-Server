@@ -36,16 +36,17 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
   }
 
   def boilKettleAssistant(): Action[JsValue] = Action(parse.json) {implicit request =>
+    var isEmpty = false
     val userID = (request.body \ "userID").asOpt[String].getOrElse("")
     devices.getUserBridges(userID).map {x =>
-      if(x.isEmpty) Ok("No bridges for user " + userID)
+      if(x.isEmpty) isEmpty = true
       x.foreach(b => WebSocketManager.getConnection(b) match {
         case Some(c) =>
           c ! "kettle"
         case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
       })
     }
-    Ok("Boiling kettle for " + userID)
+    Ok("Boiling kettle for " + userID + " " + isEmpty)
   }
 
   def setLightIP(): Action[JsValue] = auth.JWTAuthentication.async(parse.json){ implicit request =>
