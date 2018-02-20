@@ -41,3 +41,4 @@ POST    /actuator/kettle/IP         controllers.ActuatorController.setKettleIP
 POST    /actuator/kettle            controllers.ActuatorController.boilKettle
 POST    /actuator/lights/IP         controllers.ActuatorController.setLightIP
 POST    /actuator/lights            controllers.ActuatorController.setLights
+POST    /actuator/kettle/assistant  controllers.ActuatorController.boilKettleAssistant
