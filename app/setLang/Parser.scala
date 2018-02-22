@@ -34,7 +34,9 @@ class Parser extends StandardTokenParsers
                                           case a ~ None => a
                                         }
 
-  def timeCondition: Parser[Condition] = time ~ operator ~ time ^^ { case a ~ b ~ c => TimeCondition(b, a, c) }
+  def timeCondition: Parser[Condition] = timeString ~ operator ~ timeString  ^^ { case a ~ b ~ c => TimeCondition(b, a, c) }
+
+  def timeString: Parser[String] = "time" ~ "(" ~> time <~ ")" ^^ { a => a }
 
   def time: Parser[String] = "now"  |
                               stringLit ^^ {
