@@ -38,7 +38,7 @@ class Parser extends StandardTokenParsers
 
   def time: Parser[String] = "now"  |
                               stringLit ^^^ {
-                                case a =>
+                                case a: String =>
                                   val formatter: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm:ss")
                                   val date = formatter.parseDateTime(a)
                                   if(date == null)
