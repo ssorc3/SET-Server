@@ -15,15 +15,20 @@ class ScriptRepository @Inject() (protected val dbConfigProvider: DatabaseConfig
   class ScriptTable(tag: Tag) extends Table[Script](tag, "scripts") {
     val userID = column[String]("userID", O.PrimaryKey)
     val script = column[String]("script")
+    val lastRun = column[Long]("lastRun")
 
-    def * = (userID, script) <> ((Script.apply _).tupled, Script.unapply)
+    def * = (userID, script, lastRun) <> ((Script.apply _).tupled, Script.unapply)
   }
 
   val scripts = TableQuery[ScriptTable]
 
   def setUserScript(userID: String, script: String): Future[Any] = {
     db.run(scripts.filter(_.userID === userID).delete)
-    db.run(scripts += Script(userID, script))
+    db.run(scripts += Script(userID, script, 0))
+  }
+
+  def updateLastRun(userID: String, lastRun: Long): Future[Any] = {
+    db.run(scripts.filter(_.userID === userID).map(_.lastRun).update(lastRun))
   }
 
   def getUserScript(userID: String): Future[Seq[String]] = db.run {

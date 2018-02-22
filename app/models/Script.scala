@@ -1,3 +1,3 @@
 package models
 
-case class Script(userID: String, script: String)
+case class Script(userID: String, script: String, lastRun: Long)
