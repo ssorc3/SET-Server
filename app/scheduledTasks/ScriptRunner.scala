@@ -37,6 +37,7 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
         val interpreter: Interpreter = new Interpreter(r, userID, devices, temperature, humidity, light, noise)
         try{
           interpreter.run()
+          scripts.updateLastRun(userID, System.currentTimeMillis())
         }
         catch{
           case e: Exception => println(e.getMessage)
