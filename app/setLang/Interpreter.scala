@@ -3,6 +3,8 @@ package setLang
 import setLang.model._
 import websockets.WebSocketManager
 import akka.actor._
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import repositories.DeviceRepository
 
 import scala.concurrent.ExecutionContext
@@ -65,7 +67,7 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
       case OrCondition(a, b) =>
         walkConditional(a) || walkConditional(b)
 
-      case BaseCondition(op, sensorType, threshold) =>
+      case SensorCondition(op, sensorType, threshold) =>
         val sensorValue = sensorType match {
           case "light" => lightValue
           case "temperature" => temperatureValue
@@ -82,6 +84,26 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
           case "==" => sensorValue == threshold
           case "!=" => sensorValue != threshold
         }
+
+      case TimeCondition(op, time1, time2) =>
+        val t1: DateTime = convertToDateTime(time1)
+        val t2: DateTime = convertToDateTime(time2)
+
+        op match {
+          case "<" => t1.isBefore(t2)
+          case ">" => t1.isAfter(t2)
+          case "<=" => t1.isEqual(t2) || t1.isBefore(t2)
+          case ">=" => t1.isEqual(t2) || t1.isAfter(t2)
+          case "==" => t1.isEqual(t2)
+          case "!=" => !t1.isEqual(t2)
+        }
     }
+  }
+
+  def convertToDateTime(time: String): DateTime = time match {
+    case "now" => DateTime.now
+    case s: String =>
+      val formatter: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm:ss")
+            formatter.parseDateTime(s)
   }
 }

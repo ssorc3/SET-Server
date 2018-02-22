@@ -1,5 +1,7 @@
 package setLang
 
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import setLang.model.LightCommand.LightCommand
 import setLang.model._
 
@@ -23,12 +25,30 @@ class Parser extends StandardTokenParsers
                                           case a ~ None => a
                                         }
 
-  def orCondition: Parser[Condition] = baseCondition ~ opt("|" ~ condition) ^^ {
+  def orCondition: Parser[Condition] = sensorCondition ~ opt("|" ~ condition) ^^ {
+                                          case a ~ Some("|" ~ b) => OrCondition(a, b)
+                                          case a ~ None => a
+                                        }                                             |
+                                        timeCondition ~ opt("|" ~ condition) ^^ {
                                           case a ~ Some("|" ~ b) => OrCondition(a, b)
                                           case a ~ None => a
                                         }
 
-  def baseCondition: Parser[Condition] = sensorType ~ operator ~ numericLit ^^ {case a ~ b ~ c => BaseCondition(b, a, c.toInt)}
+  def timeCondition: Parser[Condition] = time ~ operator ~ time ^^ { case a ~ b ~ c => TimeCondition(b, a, c) }
+
+  def time: Parser[String] = "now"  |
+                              stringLit ^^^ {
+                                case a =>
+                                  val formatter: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm:ss")
+                                  val date = formatter.parseDateTime(a)
+                                  if(date == null)
+                                  {
+                                    throw new IllegalArgumentException("Time string was invalid")
+                                  }
+                                  a
+                              }
+
+  def sensorCondition: Parser[Condition] = sensorType ~ operator ~ numericLit ^^ {case a ~ b ~ c => SensorCondition(b, a, c.toInt)}
 
   def sensorType: Parser[String] = "temperature"   |
                                     "humidity"     |
