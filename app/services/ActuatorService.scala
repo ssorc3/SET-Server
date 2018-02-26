@@ -9,7 +9,7 @@ import websockets.WebSocketManager
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ActuatorService @Inject() (devices: DeviceRepository)(ec: ExecutionContext){
+class ActuatorService @Inject() (devices: DeviceRepository)(implicit ec: ExecutionContext){
   def changeKettlePowerSetting(userID: String, command: PowerSetting): Unit = {
     sendToUserBridge(userID, "kettle " + command)
   }
