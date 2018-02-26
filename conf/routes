@@ -37,8 +37,5 @@ POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(de
 GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
 
 #ActuatorController
-POST    /actuator/kettle/IP         controllers.ActuatorController.setKettleIP
 POST    /actuator/kettle            controllers.ActuatorController.boilKettle
-POST    /actuator/kettle/assistant  controllers.ActuatorController.boilKettleAssistant
-POST    /actuator/lights/IP         controllers.ActuatorController.setLightIP
 POST    /actuator/lights            controllers.ActuatorController.setLights
