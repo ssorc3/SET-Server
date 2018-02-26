@@ -118,6 +118,12 @@ requires user token<br>
 ## Actuators
 ### Kettle
 `POST /actuator/kettle`<br>
+Sample request:
+```
+{
+  "on": true
+}
+```
 returns OK
 
 ### Lights
