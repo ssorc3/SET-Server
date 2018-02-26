@@ -1,16 +1,13 @@
 package setLang
 
-import setLang.model._
-import websockets.WebSocketManager
-import akka.actor._
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import repositories.DeviceRepository
+import services.ActuatorService
+import setLang.model._
 
 import scala.concurrent.ExecutionContext
 
-class Interpreter(program: List[Statement], userID: String, devices: DeviceRepository,
-                  temperatureValue: Double, humidityValue: Double,
+class Interpreter(program: List[Statement], userID: String, actuators: ActuatorService, temperatureValue: Double, humidityValue: Double,
                   lightValue: Double, noiseValue: Int)(implicit ec: ExecutionContext)
 {
   def run(): Unit = {
@@ -18,40 +15,30 @@ class Interpreter(program: List[Statement], userID: String, devices: DeviceRepos
       if (walkConditional(statement.condition)) {
         for (action: Action <- statement.actions) {
           action match {
-            case Email() => {
+            case Email() =>
               //Can't email yet
-            }
-            case Text() => {
+
+            case Text() =>
               //Can't text yet
-            }
-            case Notification() => {
+
+            case Notification() =>
               //Can't do notifications yet
-            }
-            case Kettle() => {
-              devices.getUserBridges(userID).map(x => x.foreach(print))
-              devices.getUserBridges(userID).map(_.foreach(b => {
-                WebSocketManager.getConnection(b) match {
-                  case Some(c) => c ! "kettle"
-                  case _ =>
-                }
-              }))
-            }
-            case LightSetting(isWhite, hue, brightness) => {
-              devices.getUserBridges(userID).map(_.foreach(b => {
-                WebSocketManager.getConnection(b) match {
-                  case Some(c) => c ! "lightSetting " + isWhite  + " " + hue + " " + brightness
-                  case _ =>
-                }
-              }))
-            }
-            case Lights(command) => {
-              devices.getUserBridges(userID).map(_.foreach(b => {
-                WebSocketManager.getConnection(b) match {
-                  case Some(c) => c ! "lights " + command
-                  case _ =>
-                }
-              }))
-            }
+
+            case Alarm() =>
+              actuators.activateAlarm(userID)
+
+            case Kettle(command) =>
+              actuators.changeKettlePowerSetting(userID, command)
+
+            case LightSetting(isWhite, hue, brightness) =>
+              actuators.setLightSetting(userID, isWhite, hue, brightness)
+
+            case Lights(command) =>
+              actuators.changeLightPowerSetting(userID, command)
+
+            case Plug(command) =>
+              actuators.changePlugPowerSetting(userID, command)
+
             case _ => println("hi")
           }
         }

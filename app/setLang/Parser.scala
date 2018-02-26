@@ -2,14 +2,14 @@ package setLang
 
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import setLang.model.LightCommand.LightCommand
+import setLang.model.PowerSetting.PowerSetting
 import setLang.model._
 
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class Parser extends StandardTokenParsers
 {
-  lexical.reserved += ("temperature", "humidity", "light", "lightSetting", "noise", "end", "if", "then", "on", "off", "email", "text", "notification", "lights", "kettle", "true", "false", "time", "now")
+  lexical.reserved += ("temperature", "humidity", "light", "lightSetting", "noise", "end", "if", "then", "on", "off", "email", "text", "notification", "lights", "kettle", "true", "false", "time", "now", "alarm", "plug")
   lexical.delimiters += (">", "<", ">=", "<=", "==", "!=", "&", "|", "(", ")", ";", ",")
 
   def program: Parser[List[Statement]] = rep(stmt)
@@ -64,16 +64,18 @@ class Parser extends StandardTokenParsers
                                   "==" |
                                   "!="
 
-  def action: Parser[Action] = "email"  ^^^ Email()                          |
-                                "text"  ^^^ Text()                           |
-                                "notification" ^^^ Notification()            |
-                                "kettle" ^^^ Kettle()                        |
-                                "lights" ~> lightCommand ^^ {a => Lights(a)} |
+  def action: Parser[Action] = "email"  ^^^ Email()                           |
+                                "text"  ^^^ Text()                            |
+                                "notification" ^^^ Notification()             |
+                                "kettle" ~> powerSetting ^^ {a => Kettle(a)}  |
+                                "alarm" ^^^ Alarm()                           |
+                                "plug" ~> powerSetting ^^ { a => Plug(a)}     |
+                                "lights" ~> powerSetting ^^ { a => Lights(a)} |
                                 ("lightSetting" ~> bool) ~ ("," ~> numericLit) ~ ("," ~> numericLit) ^^ {case a ~ b ~ c => LightSetting(a, b.toInt, c.toInt)}
 
 
-  def lightCommand: Parser[LightCommand] = "on"  ^^^ LightCommand.ON   |
-                                            "off" ^^^ LightCommand.OFF
+  def powerSetting: Parser[PowerSetting] = "on"  ^^^ PowerSetting.ON   |
+                                            "off" ^^^ PowerSetting.OFF
 
   def bool: Parser[Boolean] = "true" ^^^ true |
                               "false" ^^^ false

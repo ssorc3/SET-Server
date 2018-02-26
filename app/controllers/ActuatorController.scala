@@ -6,76 +6,32 @@ import auth.{JWTUtil, SecuredAuthenticator}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.{DeviceRepository, UserRepository}
+import services.ActuatorService
+import setLang.model.PowerSetting
 import websockets.WebSocketManager
 
 import scala.concurrent.ExecutionContext
 
-class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, devices: DeviceRepository, users: UserRepository)(implicit ec: ExecutionContext) extends AbstractController(cc) {
-  def setKettleIP(): Action[JsValue] = auth.JWTAuthentication.async(parse.json){ implicit request =>
-    val userID = request.user.userID
-    val kettleIP: String = (request.body \ "ip").asOpt[String].getOrElse("")
-    devices.getUserBridges(userID).map{x =>
-      x.foreach(b => WebSocketManager.getConnection(b) match{
-        case Some(c) => c ! "KETTLEIP:" + kettleIP
-        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
-      })
-      Ok
-    }
-  }
+class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, devices: DeviceRepository, users: UserRepository, actuators: ActuatorService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  def boilKettle(): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
+  def boilKettle(): Action[AnyContent] = auth.JWTAuthentication(parse.default) { implicit request =>
     val userID = request.user.userID
-    devices.getUserBridges(userID).map {x =>
-      x.foreach(b => WebSocketManager.getConnection(b) match {
-        case Some(c) =>
-          c ! "kettle"
-        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
-      })
-      Ok
-    }
-  }
-
-  def boilKettleAssistant(): Action[JsValue] = Action(parse.json) { implicit request =>
-    val username = (request.body \ "username").asOpt[String].getOrElse("")
-    users.idByUsername(username).map(u =>
-      devices.getUserBridges(u.headOption.getOrElse("")).map(x =>
-        x.foreach(b => WebSocketManager.getConnection(b) match {
-          case Some(c) =>
-            c ! "kettle"
-          case _ =>
-        })
-      )
-    )
+    actuators.changeKettlePowerSetting(userID, PowerSetting.ON)
     Ok
   }
 
-  def setLightIP(): Action[JsValue] = auth.JWTAuthentication.async(parse.json){ implicit request =>
-    val userID = request.user.userID
-    val lightIP: String = (request.body \ "ip").asOpt[String].getOrElse("")
-    val lightMac: String = (request.body \ "mac").asOpt[String].getOrElse("")
-    devices.getUserBridges(userID).map{x =>
-      x.foreach(b => WebSocketManager.getConnection(b) match{
-        case Some(c) =>
-          c ! "LIGHTIP: " + lightIP + " " + lightMac
-        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
-      })
-      Ok
-    }
-  }
-
-  def setLights(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
+  def setLights(): Action[JsValue] = auth.JWTAuthentication(parse.json) {implicit request =>
     val userID = request.user.userID
     val isWhite: Boolean = (request.body \ "isWhite").asOpt[Boolean].getOrElse(false)
     val hue: Int = (request.body \ "hue").asOpt[Int].getOrElse(255)
     val brightness: Int = (request.body \ "brightness").asOpt[Int].getOrElse(255)
-    devices.getUserBridges(userID).map {x =>
-      x.foreach(b => WebSocketManager.getConnection(b) match {
-        case Some(c) =>
-          c ! "lights on"
-          c ! "lightSetting " + isWhite + " " + hue  + " " + brightness
-        case _ => Ok(<h1>We're having a problem contacting your bridge. Make sure it is connected.</h1>)
-      })
-      Ok
-    }
+    actuators.setLightSetting(userID, isWhite, hue, brightness)
+    Ok
+  }
+
+  def setPlug(): Action[JsValue] = auth.JWTAuthentication(parse.json) { implicit request =>
+    val userID = request.user.userID
+    val
+    Ok
   }
 }
