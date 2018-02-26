@@ -31,7 +31,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
 
   def setPlug(): Action[JsValue] = auth.JWTAuthentication(parse.json) { implicit request =>
     val userID = request.user.userID
-    val
+    val on = (request.body \ "on").asOpt[Boolean].getOrElse(false)
     Ok
   }
 }
