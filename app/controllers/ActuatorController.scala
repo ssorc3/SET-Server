@@ -13,9 +13,10 @@ import scala.concurrent.ExecutionContext
 
 class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, devices: DeviceRepository, users: UserRepository, actuators: ActuatorService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  def boilKettle(): Action[AnyContent] = auth.JWTAuthentication(parse.default) { implicit request =>
+  def setKettle(): Action[JsValue] = auth.JWTAuthentication(parse.json) { implicit request =>
     val userID = request.user.userID
-    actuators.changeKettlePowerSetting(userID, PowerSetting.ON)
+    val on = (request.body \ "on").asOpt[Boolean].getOrElse(false)
+    actuators.changeKettlePowerSetting(userID, if(on) PowerSetting.ON else PowerSetting.OFF)
     Ok
   }
 

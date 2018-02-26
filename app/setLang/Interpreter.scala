@@ -10,40 +10,49 @@ import scala.concurrent.ExecutionContext
 class Interpreter(program: List[Statement], userID: String, actuators: ActuatorService, temperatureValue: Double, humidityValue: Double,
                   lightValue: Double, noiseValue: Int)(implicit ec: ExecutionContext)
 {
-  def run(): Unit = {
+  def run(): Boolean = {
     for (statement: Statement <- program) {
       if (walkConditional(statement.condition)) {
         for (action: Action <- statement.actions) {
           action match {
             case Email() =>
               //Can't email yet
+              return false
 
             case Text() =>
               //Can't text yet
+              return false
 
             case Notification() =>
               //Can't do notifications yet
+              return false
 
             case Alarm() =>
               actuators.activateAlarm(userID)
+              return true
 
             case Kettle(command) =>
               actuators.changeKettlePowerSetting(userID, command)
+              return true
 
             case LightSetting(isWhite, hue, brightness) =>
               actuators.setLightSetting(userID, isWhite, hue, brightness)
+              return true
 
             case Lights(command) =>
               actuators.changeLightPowerSetting(userID, command)
+              return true
 
             case Plug(command) =>
               actuators.changePlugPowerSetting(userID, command)
+              return true
 
             case _ => println("hi")
           }
         }
       }
     }
+    false
   }
 
   def walkConditional(condition: Condition): Boolean = {
