@@ -4,14 +4,14 @@ import javax.inject.Inject
 
 import akka.actor.ActorSystem
 import play.api.inject._
-import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
+import repositories.{ScriptRepository, SensorDataRepository, UserRepository}
 import services.ActuatorService
-import setLang.{Interpreter, Parser}
 import setLang.model.Statement
+import setLang.{Interpreter, Parser}
 import websockets.WebSocketManager
 
-import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext}
 
 class ScriptTask extends SimpleModule(bind[ScriptRunner].toSelf.eagerly())
 

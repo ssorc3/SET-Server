@@ -2,13 +2,12 @@ package controllers
 
 import javax.inject.Inject
 
-import auth.{JWTUtil, SecuredAuthenticator}
-import play.api.libs.json.{JsValue, Json}
+import auth.SecuredAuthenticator
+import play.api.libs.json.JsValue
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.{DeviceRepository, UserRepository}
 import services.ActuatorService
 import setLang.model.PowerSetting
-import websockets.WebSocketManager
 
 import scala.concurrent.ExecutionContext
 
@@ -32,6 +31,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
   def setPlug(): Action[JsValue] = auth.JWTAuthentication(parse.json) { implicit request =>
     val userID = request.user.userID
     val on = (request.body \ "on").asOpt[Boolean].getOrElse(false)
+    actuators.changePlugPowerSetting(userID, if(on) PowerSetting.ON else PowerSetting.OFF)
     Ok
   }
 }

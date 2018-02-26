@@ -7,11 +7,8 @@ import com.google.inject.Singleton
 import play.api.libs.json.JsValue
 import play.api.mvc._
 import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository}
-import setLang.model.Statement
-import setLang.{Interpreter, Parser}
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenticator, devices: DeviceRepository, sensors: SensorDataRepository, scripts: ScriptRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){

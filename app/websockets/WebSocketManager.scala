@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 import akka.actor.ActorRef
 
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 class WebSocketManager {

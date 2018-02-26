@@ -1,6 +1,5 @@
 package setLang
 
-import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import setLang.model.PowerSetting.PowerSetting
 import setLang.model._

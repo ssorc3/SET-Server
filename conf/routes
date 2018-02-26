@@ -39,3 +39,4 @@ GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(device
 #ActuatorController
 POST    /actuator/kettle            controllers.ActuatorController.boilKettle
 POST    /actuator/lights            controllers.ActuatorController.setLights
+POST    /actuator/plug              controllers.ActuatorController.setPlug

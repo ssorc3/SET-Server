@@ -1,7 +1,5 @@
 package setLang.model
 
-import org.joda.time.DateTime
-
 abstract class Condition
 
 case class SensorCondition(op: String, left: String, right: Int) extends Condition

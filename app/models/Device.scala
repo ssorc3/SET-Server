@@ -1,8 +1,8 @@
 package models
 
 import play.api.http._
-import play.api.mvc._
 import play.api.libs.json._
+import play.api.mvc._
 
 case class Bridge(bridgeID: String)
 
