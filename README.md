@@ -34,6 +34,16 @@ Sample Request:<br>
 ```
 requires User Token<br>
 
+### Rename a device
+`PUT /device/(deviceID)`<br>
+Sample Request: <br>
+```
+{
+  "deviceName": "This is actually not the living room"
+}
+```
+requires token<br>
+
 ### Delete device:
 `DELETE /device/(deviceID)`<br>
 Requires User Token<br>
@@ -122,6 +132,17 @@ Sample request:
 ```
 returns OK<br>
 requires Token
+
+### Plug
+`POST /actuator/plug` <br>
+Sample request:
+```
+{
+  "on": true
+}
+```
+returns OK<br>
+requires token
 
 ## Bridges
 ### WebSocket
