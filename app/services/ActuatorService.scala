@@ -6,8 +6,10 @@ import repositories.DeviceRepository
 import setLang.model.PowerSetting.PowerSetting
 import websockets.WebSocketManager
 
+import scala.concurrent.ExecutionContext
+
 @Singleton
-class ActuatorService @Inject() (devices: DeviceRepository){
+class ActuatorService @Inject() (devices: DeviceRepository)(ec: ExecutionContext){
   def changeKettlePowerSetting(userID: String, command: PowerSetting): Unit = {
     sendToUserBridge(userID, "kettle " + command)
   }
