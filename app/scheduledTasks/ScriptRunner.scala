@@ -5,6 +5,7 @@ import javax.inject.Inject
 import akka.actor.ActorSystem
 import play.api.inject._
 import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
+import services.ActuatorService
 import setLang.{Interpreter, Parser}
 import setLang.model.Statement
 import websockets.WebSocketManager
@@ -14,7 +15,7 @@ import scala.concurrent.duration._
 
 class ScriptTask extends SimpleModule(bind[ScriptRunner].toSelf.eagerly())
 
-class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository, sensors: SensorDataRepository, devices: DeviceRepository, users: UserRepository)(implicit executionContext: ExecutionContext) {
+class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository, sensors: SensorDataRepository, actuators: ActuatorService, users: UserRepository, )(implicit executionContext: ExecutionContext) {
 
   actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 10.seconds) {
     users.list.map{u =>
@@ -34,7 +35,7 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
       case parser.Success(r: List[Statement], _) =>
-        val interpreter: Interpreter = new Interpreter(r, userID, devices, temperature, humidity, light, noise)
+        val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise)
         try{
           interpreter.run()
           scripts.updateLastRun(userID, System.currentTimeMillis())
