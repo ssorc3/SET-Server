@@ -26,6 +26,10 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     devices += Device(deviceID, userID, deviceName)
   }
 
+  def rename(deviceID: String, userID: String, deviceName: String): Future[Any] = db.run{
+    devices.filter(d => d.deviceID === deviceID && d.userID === userID).map(_.deviceName).update(deviceName)
+  }
+
   def getUserDevices(userID: String): Future[Seq[Device]] = db.run {
     devices.filter(_.userID === userID).result
   }

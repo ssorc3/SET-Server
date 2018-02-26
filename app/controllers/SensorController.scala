@@ -23,6 +23,16 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  def rename(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
+    val userID = request.user.userID
+    val deviceName = (request.body \ "deviceName").as[String]
+    devices.exists(deviceID).flatMap{
+      case true =>
+        devices.rename(deviceID, userID, deviceName).map(_ => Ok("Device renamed"))
+      case false => Future.successful(BadRequest("Device has not yet been registered"))
+    }
+  }
+
   def getUserDevices: Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
     val userID = request.user.userID
     devices.getUserDevices(userID).map(d => Ok(d))

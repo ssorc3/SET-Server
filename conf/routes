@@ -24,6 +24,7 @@ POST    /script/check               controllers.ScriptController.checkScript
 
 #SensorController
 GET     /device                     controllers.SensorController.getUserDevices
+PUT     /device/:deviceID           controllers.SensorController.rename(deviceID)
 POST    /device/:deviceID           controllers.SensorController.registerDevice(deviceID)
 DELETE  /device/:deviceID           controllers.SensorController.deleteUserDevice(deviceID)
 
