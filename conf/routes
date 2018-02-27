@@ -39,6 +39,7 @@ GET     /sensor/2/:deviceID         controllers.SensorController.getLight(device
 GET     /sensor/2/:deviceID/:time   controllers.SensorController.getTimeLight(deviceID, time)
 POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(deviceID)
 GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
+GET     /sensor/3/:deviceID/:time   controllers.SensorController.getTimeNoise(deviceID, time)
 
 #ActuatorController
 POST    /actuator/kettle            controllers.ActuatorController.setKettle

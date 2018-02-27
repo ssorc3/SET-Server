@@ -129,6 +129,19 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  def getTimeLight(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
+       case true =>
+         time match {
+           case "10mins" => sensors.getMinuteLights(deviceID).map(t => Ok(t))
+           case "hour" => sensors.getHourLights(deviceID).map(t => Ok(t))
+           case "day" => sensors.getDayLights(deviceID).map(t => Ok(t))
+           case _ => Future.successful(NotFound)
+         }
+       case false => Future.successful(BadRequest("Invalid device"))
+     }
+  }
+
   def receiveNoise(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
     devices.exists(deviceID).flatMap{
       case true =>
@@ -145,5 +158,18 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         sensors.getNoise(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid Device"))
     }
+  }
+
+  def getTimeNoise(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
+       case true =>
+         time match {
+           case "10mins" => sensors.getMinuteNoise(deviceID).map(t => Ok(t))
+           case "hour" => sensors.getHourNoise(deviceID).map(t => Ok(t))
+           case "day" => sensors.getDayNoise(deviceID).map(t => Ok(t))
+           case _ => Future.successful(NotFound)
+         }
+       case false => Future.successful(BadRequest("Invalid device"))
+     }
   }
 }
