@@ -53,6 +53,10 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     users.filter(_.username === username).map(_.userID).result
   }
 
+  def usernameByID(userID: String): Future[Option[String]] = db.run {
+    users.filter(_.userID === userID).map(_.username).result.map(_.headOption)
+  }
+
   def isValid(username: String, password: String): Boolean = {
     val users = Await.result(getUsers(username), Duration.Inf)
     users.headOption match {

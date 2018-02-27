@@ -17,6 +17,8 @@ libraryDependencies += "com.h2database" % "h2" % "1.4.196"
 
 libraryDependencies += "org.mindrot" % "jbcrypt" % "0.4"
 
+libraryDependencies += ws
+
 libraryDependencies += "com.jason-goodwin" %% "authentikat-jwt" % "0.4.5"
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"

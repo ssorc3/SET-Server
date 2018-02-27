@@ -2,14 +2,36 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import repositories.DeviceRepository
+import play.api.libs.json.Json
+import play.api.libs.{json, ws}
+import play.api.libs.ws.{WSAuthScheme, WSClient, WSRequest}
+import repositories.{DeviceRepository, UserRepository}
 import setLang.model.PowerSetting.PowerSetting
 import websockets.WebSocketManager
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ActuatorService @Inject() (devices: DeviceRepository)(implicit ec: ExecutionContext){
+class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository, ws: WSClient)(implicit ec: ExecutionContext){
+  def sendNotification(userID: String, body: String): Unit =
+  {
+    users.usernameByID(userID).map{s =>
+      var username = s.getOrElse("")
+
+      val request: WSRequest = ws.url("https://onesignal.com/api/v1/notifications").withHttpHeaders(
+        "content-type" -> "application/json",
+        "Authorization" -> "Basic MWQ1ZWQ4ZGItNGJkNS00ZTNjLTk5NGEtZDRiMzIxNzZiZTlj"
+      )
+
+      request.post(Json.obj{
+        "app_id" -> "86bc7243-e633-4731-8e0c-b4ec0edbac04",
+        "included_segments" -> Json.arr(
+          username
+        )
+      })
+    }
+  }
+
   def changeKettlePowerSetting(userID: String, command: PowerSetting): Unit = {
     sendToUserBridge(userID, "kettle " + command)
   }
