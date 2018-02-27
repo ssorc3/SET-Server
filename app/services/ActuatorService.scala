@@ -27,7 +27,7 @@ class ActuatorService @Inject() (devices: DeviceRepository)(implicit ec: Executi
   }
 
   def activateAlarm(userID: String): Unit = {
-    sendToUserBridge(userID, "alarm")
+    sendToUserBridge(userID, "alert")
   }
 
   def sendToUserBridge(userID: String, message: String): Unit =
