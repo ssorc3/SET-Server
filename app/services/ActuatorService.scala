@@ -14,6 +14,7 @@ import scala.concurrent.ExecutionContext
 class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository, ws: WSClient)(implicit ec: ExecutionContext){
   def sendNotification(userID: String, body: String): Unit =
   {
+    println("Notification")
     users.usernameByID(userID).map{s =>
       var username = s.getOrElse("")
 
