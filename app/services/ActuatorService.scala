@@ -23,12 +23,12 @@ class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository
         "Authorization" -> "Basic MWQ1ZWQ4ZGItNGJkNS00ZTNjLTk5NGEtZDRiMzIxNzZiZTlj"
       )
 
-      request.post(Json.obj{
+      request.post(Json.obj(
         "app_id" -> "86bc7243-e633-4731-8e0c-b4ec0edbac04",
         "included_segments" -> Json.arr(
           username
         )
-      })
+      ))
     }
   }
 
