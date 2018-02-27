@@ -98,8 +98,9 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
 
   def convertToDateTime(time: String): DateTime = time match {
     case "now" => DateTime.now
-    case s: String =>
+    case s =>
       val formatter: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm:ss")
-            formatter.parseDateTime(s)
+      val userTime = formatter.parseLocalTime(s)
+      DateTime.now.withTime(userTime)
   }
 }

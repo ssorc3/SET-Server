@@ -1,5 +1,6 @@
 package setLang
 
+import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import setLang.model.PowerSetting.PowerSetting
 import setLang.model._
@@ -41,8 +42,10 @@ class Parser extends StandardTokenParsers
                               stringLit ^^ {
                                 a: String =>
                                   val formatter: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm:ss")
-                                  val date = formatter.parseDateTime(a)
-                                  if(date == null)
+                                  val userTime = formatter.parseLocalTime(a)
+                                  val userDate = DateTime.now.withTime(userTime)
+
+                                  if(userDate == null)
                                   {
                                     throw new IllegalArgumentException("Time string was invalid")
                                   }
