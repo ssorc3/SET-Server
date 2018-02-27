@@ -3,8 +3,7 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
-import play.api.libs.{json, ws}
-import play.api.libs.ws.{WSAuthScheme, WSClient, WSRequest}
+import play.api.libs.ws.{WSClient, WSRequest}
 import repositories.{DeviceRepository, UserRepository}
 import setLang.model.PowerSetting.PowerSetting
 import websockets.WebSocketManager
@@ -25,9 +24,7 @@ class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository
 
       request.post(Json.obj(
         "app_id" -> "86bc7243-e633-4731-8e0c-b4ec0edbac04",
-        "included_segments" -> Json.arr(
-          username
-        )
+        "included_segments" -> Json.arr(username)
       ))
     }
   }

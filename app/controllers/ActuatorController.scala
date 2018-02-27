@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenticator
 import play.api.libs.json.JsValue
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, ControllerComponents}
 import repositories.{DeviceRepository, UserRepository}
 import services.ActuatorService
 import setLang.model.PowerSetting
