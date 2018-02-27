@@ -23,5 +23,7 @@ libraryDependencies += "com.jason-goodwin" %% "authentikat-jwt" % "0.4.5"
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"
 
+libraryDependencies += "joda-time" % "joda-time" % "2.9.9"
+
 libraryDependencies += specs2 % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test"
