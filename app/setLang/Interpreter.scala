@@ -86,7 +86,7 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
         val t2: DateTime = convertToDateTime(time2)
 
         println(t1.getMillis)
-        println(t1.getMillis)
+        println(t2.getMillis)
 
         op match {
           case "<" => t1.isBefore(t2)
