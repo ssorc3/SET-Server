@@ -15,7 +15,7 @@ class UserController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, repo:
   def createUser: Action[JsValue] = Action.async(parse.json) { implicit request =>
     val username = (request.body \ "username").as[String]
     val password = (request.body \ "password").as[String]
-    repo.isValidAsync(username, password).flatMap{
+    repo.usernameExists(username).flatMap{
       case false =>
         repo.create(username, password).map(token =>
           Ok(token)

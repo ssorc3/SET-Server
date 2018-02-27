@@ -68,13 +68,15 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   }
 
   def getTimeTemperature(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
-     devices.deviceBelongsToUser(deviceID, request.user.userID).map {
-       time match {
-         case "10mins" => sensors.getMinuteTemperatures(deviceID).map(t => Ok(t))
-         case "hour" => sensors.getHourTemperatures(deviceID).map(t => Ok(t))
-         case "day" => sensors.getDayTemperatures(deviceID).map(t => Ok(t))
-         case _ => Future.successful(NotFound)
-       }
+     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
+       case true =>
+         time match {
+           case "10mins" => sensors.getMinuteTemperatures(deviceID).map(t => Ok(t))
+           case "hour" => sensors.getHourTemperatures(deviceID).map(t => Ok(t))
+           case "day" => sensors.getDayTemperatures(deviceID).map(t => Ok(t))
+           case _ => Future.successful(NotFound)
+         }
+       case false => Future.successful(BadRequest("Invalid device"))
      }
   }
 
@@ -94,6 +96,19 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         sensors.getHumidity(deviceID, page).map(t => Ok(t))
       case false => Future.successful(BadRequest("Invalid device"))
     }
+  }
+
+  def getTimeHumidity(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
+       case true =>
+         time match {
+           case "10mins" => sensors.getMinuteTemperatures(deviceID).map(t => Ok(t))
+           case "hour" => sensors.getHourTemperatures(deviceID).map(t => Ok(t))
+           case "day" => sensors.getDayTemperatures(deviceID).map(t => Ok(t))
+           case _ => Future.successful(NotFound)
+         }
+       case false => Future.successful(BadRequest("Invalid device"))
+     }
   }
 
   def receiveLight(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
