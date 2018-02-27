@@ -34,15 +34,15 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }
 
   def getMinuteTemperatures(deviceID: String): Future[Seq[TemperatureData]] = db.run {
-    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).result
+    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).sortBy(_.timestamp.asc).result
   }
 
   def getHourTemperatures(deviceID: String): Future[Seq[TemperatureData]] = db.run {
-    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).result
+    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getDayTemperatures(deviceID: String): Future[Seq[TemperatureData]] = db.run {
-    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).result
+    temperatures.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getLatestUserTemperature(userID: String): Future[Seq[Double]] = db.run {
@@ -72,15 +72,15 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }
 
   def getMinuteHumidities(deviceID: String): Future[Seq[HumidityData]] = db.run {
-    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).result
+    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).sortBy(_.timestamp.asc).result
   }
 
   def getHourHumidities(deviceID: String): Future[Seq[HumidityData]] = db.run {
-    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).result
+    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getDayHumidities(deviceID: String): Future[Seq[HumidityData]] = db.run {
-    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).result
+    humidities.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getLatestUserHumidity(userID: String): Future[Seq[Double]] = db.run {
@@ -110,15 +110,15 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }
 
   def getMinuteLights(deviceID: String): Future[Seq[LightData]] = db.run {
-    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).result
+    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).sortBy(_.timestamp.asc).result
   }
 
   def getHourLights(deviceID: String): Future[Seq[LightData]] = db.run {
-    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).result
+    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getDayLights(deviceID: String): Future[Seq[LightData]] = db.run {
-    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).result
+    lights.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getLatestUserLight(userID: String): Future[Seq[Double]] = db.run {
@@ -148,15 +148,15 @@ class SensorDataRepository @Inject()(protected val dbConfigProvider: DatabaseCon
   }
 
   def getMinuteNoise(deviceID: String): Future[Seq[NoiseData]] = db.run {
-    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).result
+    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 10*60)).sortBy(_.timestamp.asc).result
   }
 
   def getHourNoise(deviceID: String): Future[Seq[NoiseData]] = db.run {
-    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).result
+    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getDayNoise(deviceID: String): Future[Seq[NoiseData]] = db.run {
-    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).result
+    noises.filter(d => d.deviceID === deviceID && d.timestamp > ((System.currentTimeMillis()/1000) - 24*60*60)).sortBy(_.timestamp.asc).result
   }
 
   def getLatestUserNoise(userID: String): Future[Seq[Int]] = db.run {
