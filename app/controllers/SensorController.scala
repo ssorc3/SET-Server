@@ -67,6 +67,17 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  def getTimeTemperature(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
+       time match {
+         case "10mins" => sensors.getMinuteTemperatures(deviceID).map(t => Ok(t))
+         case "hour" => sensors.getHourTemperatures(deviceID).map(t => Ok(t))
+         case "day" => sensors.getDayTemperatures(deviceID).map(t => Ok(t))
+         case _ => Future.successful(NotFound)
+       }
+     }
+  }
+
   def receiveHumidity(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
     devices.exists(deviceID).flatMap{
       case true =>
