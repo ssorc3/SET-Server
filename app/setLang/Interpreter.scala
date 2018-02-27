@@ -23,9 +23,9 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
               //Can't text yet
               return false
 
-            case Notification() =>
-              //Can't do notifications yet
-              return false
+            case Notification(s) =>
+              actuators.sendNotification(userID, s)
+              return true
 
             case Alarm() =>
               actuators.activateAlarm(userID)

@@ -24,6 +24,9 @@ class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository
 
       request.post(Json.obj(
         "app_id" -> "86bc7243-e633-4731-8e0c-b4ec0edbac04",
+        "contents" -> Json.obj(
+          "en" -> body
+        ),
         "included_segments" -> Json.arr(username)
       ))
     }
