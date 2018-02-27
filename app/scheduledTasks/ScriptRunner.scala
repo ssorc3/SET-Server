@@ -38,8 +38,8 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
       case parser.Success(r: List[Statement], _) =>
         val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise)
         try{
-          interpreter.run()
-          scripts.updateLastRun(userID, System.currentTimeMillis())
+          if(interpreter.run())
+            scripts.updateLastRun(userID, System.currentTimeMillis())
         }
         catch{
           case e: Exception => println(e.getMessage)
