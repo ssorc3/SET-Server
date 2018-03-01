@@ -1,9 +1,9 @@
-package setLang
+package scala.setLang
 
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import services.ActuatorService
-import setLang.model._
+import scala.setLang.model._
 
 import scala.concurrent.ExecutionContext
 

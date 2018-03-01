@@ -1,9 +1,9 @@
-package setLang
+package scala.setLang
 
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import setLang.model.PowerSetting.PowerSetting
-import setLang.model._
+import scala.setLang.model.PowerSetting.PowerSetting
+import scala.setLang.model._
 
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 

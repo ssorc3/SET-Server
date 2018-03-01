@@ -6,7 +6,7 @@ import auth.SecuredAuthenticator
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.ScriptRepository
-import setLang.Parser
+import scala.setLang.Parser
 
 import scala.concurrent.{ExecutionContext, Future}
 

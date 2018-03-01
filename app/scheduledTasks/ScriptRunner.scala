@@ -6,8 +6,8 @@ import akka.actor.ActorSystem
 import play.api.inject._
 import repositories.{ScriptRepository, SensorDataRepository, UserRepository}
 import services.ActuatorService
-import setLang.model.Statement
-import setLang.{Interpreter, Parser}
+import scala.setLang.model.Statement
+import scala.setLang.{Interpreter, Parser}
 import websockets.WebSocketManager
 
 import scala.concurrent.duration._

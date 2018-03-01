@@ -13,7 +13,7 @@ libraryDependencies += guice
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.3"
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3"
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.196"
+libraryDependencies += javaJdbc % Test
 
 libraryDependencies += "org.mindrot" % "jbcrypt" % "0.4"
 

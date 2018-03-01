@@ -7,7 +7,6 @@
 
 #HomeController
 GET     /                           controllers.HomeController.index
-GET     /ws                         controllers.HomeController.socketTest
 
 #UserController
 POST    /token                      controllers.UserController.getToken

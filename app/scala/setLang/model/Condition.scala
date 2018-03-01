@@ -1,4 +1,4 @@
-package setLang.model
+package scala.setLang.model
 
 abstract class Condition
 

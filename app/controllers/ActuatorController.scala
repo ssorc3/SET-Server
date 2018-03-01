@@ -7,7 +7,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{AbstractController, Action, ControllerComponents}
 import repositories.{DeviceRepository, UserRepository}
 import services.ActuatorService
-import setLang.model.PowerSetting
+import scala.setLang.model.PowerSetting
 
 import scala.concurrent.ExecutionContext
 
@@ -25,6 +25,7 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     val isWhite: Boolean = (request.body \ "isWhite").asOpt[Boolean].getOrElse(false)
     val hue: Int = (request.body \ "hue").asOpt[Int].getOrElse(255)
     val brightness: Int = (request.body \ "brightness").asOpt[Int].getOrElse(255)
+    actuators.changeLightPowerSetting(userID, PowerSetting.ON)
     actuators.setLightSetting(userID, isWhite, hue, brightness)
     Ok
   }

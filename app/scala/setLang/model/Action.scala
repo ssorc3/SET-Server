@@ -1,6 +1,6 @@
-package setLang.model
+package scala.setLang.model
 
-import setLang.model.PowerSetting.PowerSetting
+import scala.setLang.model.PowerSetting.PowerSetting
 
 abstract class Action
 

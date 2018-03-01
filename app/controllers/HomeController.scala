@@ -27,10 +27,4 @@ class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, impli
       case None => BadRequest
     }
   }
-
-  def socketTest: WebSocket = WebSocket.accept[String, String] {implicit request =>
-    ActorFlow.actorRef(out =>
-      SetWebSocket.props(out)
-    )
-  }
 }

@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSRequest}
 import repositories.{DeviceRepository, UserRepository}
-import setLang.model.PowerSetting.PowerSetting
+import scala.setLang.model.PowerSetting.PowerSetting
 import websockets.WebSocketManager
 
 import scala.concurrent.ExecutionContext
