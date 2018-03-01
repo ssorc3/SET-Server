@@ -17,7 +17,7 @@ class ScriptTask extends SimpleModule(bind[ScriptRunner].toSelf.eagerly())
 
 class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository, sensors: SensorDataRepository, actuators: ActuatorService, users: UserRepository)(implicit executionContext: ExecutionContext) {
 
-  actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 10.seconds) {
+  actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 2.seconds) {
     users.list.map{u =>
       u.foreach(x => runScript(x.userID))
       WebSocketManager.getConnections().foreach(x => x._2 ! "heartbeat")
