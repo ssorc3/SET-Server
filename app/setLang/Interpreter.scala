@@ -11,6 +11,7 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
                   lightValue: Double, noiseValue: Int)(implicit ec: ExecutionContext)
 {
   def run(): Boolean = {
+    var result: Boolean = false
     for (statement: Statement <- program) {
       if (walkConditional(statement.condition)) {
         for (action: Action <- statement.actions) {
@@ -21,38 +22,38 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
 
             case Text() =>
               //Can't text yet
-              return false
+
 
             case Notification(s) =>
               actuators.sendNotification(userID, s)
-              return true
+              result=true
 
             case Alarm() =>
               actuators.activateAlarm(userID)
-              return true
+              result=true
 
             case Kettle(command) =>
               actuators.changeKettlePowerSetting(userID, command)
-              return true
+              result = true
 
             case LightSetting(isWhite, hue, brightness) =>
               actuators.setLightSetting(userID, isWhite, hue, brightness)
-              return true
+              result=true
 
             case Lights(command) =>
               actuators.changeLightPowerSetting(userID, command)
-              return true
+              result=true
 
             case Plug(command) =>
               actuators.changePlugPowerSetting(userID, command)
-              return true
+              result=true
 
             case _ => println("hi")
           }
         }
       }
     }
-    false
+    result
   }
 
   def walkConditional(condition: Condition): Boolean = {
