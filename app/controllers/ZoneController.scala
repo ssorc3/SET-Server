@@ -26,8 +26,11 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     val currentName = (request.body \ "current").as[String]
     val newName = (request.body \ "new").as[String]
 
-    zones.getID(userID, currentName).map{z =>
-      z.foreach(zones.rename(_, userID, newName).map(_ => Ok))
+    zones.getID(userID, currentName).flatMap{z =>
+      z.headOption match {
+        case Some(x) => zones.rename(x, userID, newName).map(_ => Ok)
+        case None => Future.successful(BadRequest("Zone does not exist"))
+      }
     }
   }
 
