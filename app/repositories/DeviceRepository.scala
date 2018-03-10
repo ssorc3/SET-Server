@@ -24,7 +24,7 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
   val devices = TableQuery[DeviceTable]
 
   def create(deviceID: String, userID: String, deviceName: String): Future[Any] = db.run{
-    devices += Device(deviceID, userID, deviceName, null)
+    devices += Device(deviceID, userID, deviceName, -1)
   }
 
   def assignZone(deviceID: String, userID: String, zoneID: Int): Future[Any] = db.run {
