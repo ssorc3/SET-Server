@@ -78,7 +78,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
           case 3 => Some(sensors.getNoise(deviceID, page))
           case _ => None
         }
-        result.fold(Future.successful(BadRequest("Invalid sensor type")))(_.map(v => Ok(v)))
+        result.fold(Future.successful(BadRequest("Invalid sensor type")))(_.map(_ => Ok))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
