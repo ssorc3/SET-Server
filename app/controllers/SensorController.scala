@@ -70,8 +70,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         val timestamp: Long = (request.body \ "timestamp").as[Long]
         val result: Option[Future[Int]] = sensorType match {
           case 0 =>
-            val userID = devices.getOwnerID(deviceID).map { us =>
-              us.headOption.getOrElse("")
+            devices.getOwnerID(deviceID).map { us =>
+              val userID = us.headOption.getOrElse("")
               compareTemp(userID, value)
             }
             Some(sensors.addTemperatureReading(value, deviceID, timestamp))
