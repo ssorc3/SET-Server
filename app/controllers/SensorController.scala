@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenticator
 import com.google.inject.Singleton
+import models.SensorData
 import play.api.libs.json.JsValue
 import play.api.mvc._
 import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository}
@@ -50,21 +51,34 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
 
   // TODO: def signalUserDevice(deviceID: String): Action[AnyContent] = auth.JWTAuthentication.async
 
-  // /sensor/{type}/{deviceID}
-  def receiveTemperature(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+  def receiveData(sensorType: Int, deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) {implicit request =>
     devices.exists(deviceID).flatMap{
       case true =>
         val value: Double = (request.body \ "value").as[Double]
         val timestamp: Long = (request.body \ "timestamp").as[Long]
-        sensors.addTemperatureReading(value, deviceID, timestamp).map(_ => Ok("Temperature recorded"))
+        val result: Option[Future[Int]] = sensorType match {
+          case 0 => Some(sensors.addTemperatureReading(value, deviceID, timestamp))
+          case 1 => Some(sensors.addHumidityReading(value, deviceID, timestamp))
+          case 2 => Some(sensors.addLightReading(value, deviceID, timestamp))
+          case 3 => Some(sensors.addNoiseReading(value, deviceID, timestamp))
+          case _ => None
+        }
+        result.fold(Future.successful(BadRequest("Invalid sensor type")))(_.map(v => Ok(v)))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
 
-  def getTemperature(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
+  def getData(sensorType: Int, deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
-        sensors.getTemperatures(deviceID, page).map(t => Ok(t))
+        val result: Option[Future[Seq[SensorData]]] = sensorType match {
+          case 0 => Some(sensors.getTemperatures(deviceID, page))
+          case 1 => Some(sensors.getHumidity(deviceID, page))
+          case 2 => Some(sensors.getLight(deviceID, page))
+          case 3 => Some(sensors.getNoise(deviceID, page))
+          case _ => None
+        }
+        result.fold(Future.successful(BadRequest("Invalid sensor type")))(_.map(v => Ok(v)))
       case false => Future.successful(BadRequest("Invalid device"))
     }
   }
@@ -82,24 +96,6 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
      }
   }
 
-  def receiveHumidity(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
-    devices.exists(deviceID).flatMap{
-      case true =>
-        val value: Double = (request.body \ "value").as[Double]
-        val timestamp: Long = (request.body \ "timestamp").as[Long]
-        sensors.addHumidityReading(value, deviceID, timestamp).map(_ => Ok("Humidity recorded"))
-      case false => Future.successful(BadRequest("Invalid device"))
-    }
-  }
-
-  def getHumidity(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
-    devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
-      case true =>
-        sensors.getHumidity(deviceID, page).map(t => Ok(t))
-      case false => Future.successful(BadRequest("Invalid device"))
-    }
-  }
-
   def getTimeHumidity(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
@@ -113,24 +109,6 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
      }
   }
 
-  def receiveLight(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
-    devices.exists(deviceID).flatMap{
-      case true =>
-        val value: Double = (request.body \ "value").as[Double]
-        val timestamp: Long = (request.body \ "timestamp").as[Long]
-        sensors.addLightReading(value, deviceID, timestamp).map(_ => Ok("Light recorded"))
-      case false => Future.successful(BadRequest("Invalid device"))
-    }
-  }
-
-  def getLight(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
-    devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
-      case true =>
-        sensors.getLight(deviceID, page).map(t => Ok(t))
-      case false => Future.successful(BadRequest("Invalid device"))
-    }
-  }
-
   def getTimeLight(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
@@ -142,24 +120,6 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
          }
        case false => Future.successful(BadRequest("Invalid device"))
      }
-  }
-
-  def receiveNoise(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
-    devices.exists(deviceID).flatMap{
-      case true =>
-        val value: Int = (request.body \ "value").as[Int]
-        val timestamp: Long = (request.body \ "timestamp").as[Long]
-        sensors.addNoiseReading(value, deviceID, timestamp).map(_ => Ok("Noise recorded"))
-      case false => Future.successful(BadRequest("Invalid device"))
-    }
-  }
-
-  def getNoise(deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) { implicit request =>
-    devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
-      case true =>
-        sensors.getNoise(deviceID, page).map(t => Ok(t))
-      case false => Future.successful(BadRequest("Invalid Device"))
-    }
   }
 
   def getTimeNoise(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>

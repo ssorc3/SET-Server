@@ -27,17 +27,11 @@ PUT     /device/:deviceID           controllers.SensorController.rename(deviceID
 POST    /device/:deviceID           controllers.SensorController.registerDevice(deviceID)
 DELETE  /device/:deviceID           controllers.SensorController.deleteUserDevice(deviceID)
 
-POST    /sensor/0/:deviceID         controllers.SensorController.receiveTemperature(deviceID)
-GET     /sensor/0/:deviceID         controllers.SensorController.getTemperature(deviceID, page: Int ?= 1)
+POST    /sensor/:sensorType/:deviceID controllers.SensorController.receiveData(sensorType: Int, deviceID)
+GET     /sensor/:sensorType/:deviceID controllers.SensorController.getData(sensorType: Int, deviceID, page: Int ?= 1)
 GET     /sensor/0/:deviceID/:time   controllers.SensorController.getTimeTemperature(deviceID, time)
-POST    /sensor/1/:deviceID         controllers.SensorController.receiveHumidity(deviceID)
-GET     /sensor/1/:deviceID         controllers.SensorController.getHumidity(deviceID, page: Int ?= 1)
 GET     /sensor/1/:deviceID/:time   controllers.SensorController.getTimeHumidity(deviceID, time)
-POST    /sensor/2/:deviceID         controllers.SensorController.receiveLight(deviceID)
-GET     /sensor/2/:deviceID         controllers.SensorController.getLight(deviceID, page: Int ?= 1)
 GET     /sensor/2/:deviceID/:time   controllers.SensorController.getTimeLight(deviceID, time)
-POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(deviceID)
-GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
 GET     /sensor/3/:deviceID/:time   controllers.SensorController.getTimeNoise(deviceID, time)
 
 #ZoneController
