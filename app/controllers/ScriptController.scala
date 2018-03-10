@@ -14,27 +14,26 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
 
   def addScript(): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     val script = (request.body \ "script").asOpt[String].getOrElse("")
+    val scriptName = (request.body \ "scriptName").asOpt[String].getOrElse("default")
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
       case parser.Success(_, _) =>
-        scripts.setUserScript(request.user.userID, script).map(_ => Ok)
+        scripts.setUserScript(request.user.userID, scriptName, script).map(_ => Ok)
       case parser.Error(msg, _) => Future.successful(BadRequest(msg))
       case parser.Failure(msg, _) => Future.successful(BadRequest(msg))
     }
   }
 
   def removeScript(): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
-    scripts.setUserScript(request.user.userID, "").map{ _ =>
+    val scriptName = (request.body \ "script").asOpt[String].getOrElse("default")
+    scripts.setUserScript(request.user.userID, scriptName, "").map{ _ =>
       Ok
     }
   }
 
-  def getScript: Action[AnyContent] = auth.JWTAuthentication.async(parse.default){ implicit request =>
-    scripts.getUserScript(request.user.userID).map{ s =>
-      s.headOption match {
-        case Some(script) => Ok(Json.obj("script" -> script))
-        case None => NoContent
-      }
+  def getScripts: Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
+    scripts.getUserScripts(request.user.userID).map{ s =>
+      Ok(s)
     }
   }
 

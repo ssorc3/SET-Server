@@ -18,7 +18,7 @@ GET     /bridgeWS                   controllers.BridgeController.bridgeWebSocket
 #ScriptController
 POST    /script                     controllers.ScriptController.addScript
 DELETE  /script                     controllers.ScriptController.removeScript
-GET     /script                     controllers.ScriptController.getScript
+GET     /script                     controllers.ScriptController.getScripts
 POST    /script/check               controllers.ScriptController.checkScript
 
 #SensorController
@@ -42,7 +42,8 @@ GET     /sensor/3/:deviceID/:time   controllers.SensorController.getTimeNoise(de
 
 #ZoneController
 POST    /zone                       controllers.ZoneController.createZone
-PUT     /zone                       controllers.ZoneController.rename
+PUT     /zone                       controllers.ZoneController.renameZone
+DELETE  /zone                       controllers.ZoneController.deleteZone
 
 #ActuatorController
 POST    /actuator/kettle            controllers.ActuatorController.setKettle

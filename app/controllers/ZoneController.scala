@@ -21,7 +21,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     }
   }
 
-  def rename() = auth.JWTAuthentication.async(parse.json) {implicit request =>
+  def renameZone() = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
     val currentName = (request.body \ "current").as[String]
     val newName = (request.body \ "new").as[String]
@@ -34,5 +34,15 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     }
   }
 
-  
+  def deleteZone() = auth.JWTAuthentication.async(parse.json) {implicit request =>
+    val userID = request.user.userID
+    val zoneName = (request.body \ "zoneName").as[String]
+
+    zones.getID(userID, zoneName).flatMap{ z =>
+      z.headOption match {
+        case Some(x) => zones.delete(x, userID).map(_ => Ok)
+        case None => Future.successful(BadRequest("Zone does not exist"))
+      }
+    }
+  }
 }
