@@ -48,8 +48,12 @@ class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository
     sendToUserBridge(userID, "plug " + command)
   }
 
-  def activateAlarm(userID: String): Unit = {
-    sendToUserBridge(userID, "alert")
+  def activateAlarm(userID: String, command: PowerSetting): Unit = {
+    sendToUserBridge(userID, "alert" + command)
+  }
+
+  def armAlarm(userID: String, command: PowerSetting): Unit = {
+    sendToUserBridge(userID, "alarmarmed " + command)
   }
 
   def sendToUserBridge(userID: String, message: String): Unit =

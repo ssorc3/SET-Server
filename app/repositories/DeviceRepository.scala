@@ -43,6 +43,10 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     devices.filter(d => d.deviceID === deviceID && d.userID === userID).map(_.deviceName).update(deviceName)
   }
 
+  def getOwnerID(deviceID: String): Future[Seq[String]] = db.run {
+    devices.filter(_.deviceID === deviceID).map(_.userID).distinct.result
+  }
+
   def getUserDevices(userID: String): Future[Seq[Device]] = db.run {
     devices.filter(_.userID === userID).result
   }

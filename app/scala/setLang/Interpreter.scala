@@ -28,8 +28,8 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
               actuators.sendNotification(userID, s)
               result=true
 
-            case Alarm() =>
-              actuators.activateAlarm(userID)
+            case Alarm(command) =>
+              actuators.activateAlarm(userID, command)
               result=true
 
             case Kettle(command) =>

@@ -36,4 +36,13 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     actuators.changePlugPowerSetting(userID, if(on) PowerSetting.ON else PowerSetting.OFF)
     Ok
   }
+
+  def Alarm(): Action[JsValue] = auth.JWTAuthentication(parse.json) { implicit request =>
+    val userID = request.user.userID
+    val on = (request.body \ "on").asOpt[Boolean].getOrElse(false)
+    actuators.armAlarm(userID, if(on) PowerSetting.ON else PowerSetting.OFF)
+    Ok
+  }
+
+
 }

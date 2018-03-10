@@ -4,7 +4,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 import auth.JWTUtil
-import models.User
+import models.{IdealTemp, User}
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
@@ -57,14 +57,6 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     users.filter(_.userID === userID).map(_.username).result.map(_.headOption)
   }
 
-  def isValid(username: String, password: String): Boolean = {
-    val users = Await.result(getUsers(username), Duration.Inf)
-    users.headOption match {
-      case Some(u) => BCrypt.checkpw(password, u.hash)
-      case None => false
-    }
-  }
-
   def usernameExists(username: String): Future[Boolean] = db.run {
     users.filter(_.username === username).exists.result
   }
@@ -89,7 +81,21 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     users.filter(u => u.username === username).result
   }
 
-  def delete(): Future[Int] = db.run {
-    users.delete
+  class IdealTempTable(tag: Tag) extends Table[IdealTemp](tag, "idealTemps")
+  {
+    def userID = column[String]("userID", O.PrimaryKey)
+    def temp = column[Double]("temp")
+
+    def * = (userID, temp) <> ((IdealTemp.apply _).tupled, IdealTemp.unapply)
+  }
+
+  def idealTemps = TableQuery[IdealTempTable]
+
+  def setIdealTemp(userID: String, temp: Double): Future[Any] = db.run {
+    idealTemps += IdealTemp(userID, temp)
+  }
+
+  def getIdealTemp(userID: String): Future[Seq[Double]] = db.run {
+    idealTemps.filter(_.userID === userID).map(_.temp).result
   }
 }

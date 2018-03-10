@@ -5,14 +5,21 @@ import javax.inject.Inject
 import auth.SecuredAuthenticator
 import com.google.inject.Singleton
 import models.SensorData
-import play.api.libs.json.JsValue
+import play.api.Configuration
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc._
-import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository}
+import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
+import services.{ActuatorService, ScriptService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenticator, devices: DeviceRepository, sensors: SensorDataRepository, scripts: ScriptRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
+class SensorController @Inject()(cc: MessagesControllerComponents, auth: SecuredAuthenticator,
+                                 devices: DeviceRepository, sensors: SensorDataRepository,
+                                 scripts: ScriptRepository, ws: WSClient,
+                                 config: Configuration, scriptRunner: ScriptService,
+                                 users: UserRepository, actuators: ActuatorService)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
 
   def registerDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
@@ -49,7 +56,12 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  // TODO: def signalUserDevice(deviceID: String): Action[AnyContent] = auth.JWTAuthentication.async
+  def signalUserDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
+    val req: WSRequest = ws.url("https://api.particle.io/v1/devices/" + deviceID)
+    val signal: Int = if ((request.body \ "signal").asOpt[Boolean].getOrElse(false)) 1 else 0
+    val result = req.put(Map("signal" -> signal, "access_token" -> config.get[String]("particle_access_token")))
+    result.map(_ => Ok)
+  }
 
   def receiveData(sensorType: Int, deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) {implicit request =>
     devices.exists(deviceID).flatMap{
@@ -57,7 +69,12 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         val value: Double = (request.body \ "value").as[Double]
         val timestamp: Long = (request.body \ "timestamp").as[Long]
         val result: Option[Future[Int]] = sensorType match {
-          case 0 => Some(sensors.addTemperatureReading(value, deviceID, timestamp))
+          case 0 =>
+            val userID = devices.getOwnerID(deviceID).map { us =>
+              us.headOption.getOrElse("")
+              compareTemp(userID, value)
+            }
+            Some(sensors.addTemperatureReading(value, deviceID, timestamp))
           case 1 => Some(sensors.addHumidityReading(value, deviceID, timestamp))
           case 2 => Some(sensors.addLightReading(value, deviceID, timestamp))
           case 3 => Some(sensors.addNoiseReading(value, deviceID, timestamp))
@@ -83,7 +100,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
-  def getTimeTemperature(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+  def getTimeTemperature(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
          time match {
@@ -96,7 +113,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
      }
   }
 
-  def getTimeHumidity(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+  def getTimeHumidity(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
          time match {
@@ -109,7 +126,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
      }
   }
 
-  def getTimeLight(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+  def getTimeLight(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
          time match {
@@ -122,7 +139,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
      }
   }
 
-  def getTimeNoise(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.anyContent) {implicit request =>
+  def getTimeNoise(deviceID: String, time: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
      devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap {
        case true =>
          time match {
@@ -133,5 +150,46 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
          }
        case false => Future.successful(BadRequest("Invalid device"))
      }
+  }
+
+  def motionDetected(deviceID: String): Action[AnyContent] = Action.async(parse.default) { implicit request =>
+    devices.getOwnerID(deviceID).map{os =>
+      os.headOption match {
+        case Some(o) =>
+          scriptRunner.runScript(o, "motion")
+        case None =>
+      }
+    }
+    Future.successful(Ok)
+  }
+
+  def setIdealTemp(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
+    val temp = (request.body \ "temp").as[Double]
+    users.setIdealTemp(request.user.userID, temp).map(_ => Ok)
+  }
+
+  def getIdealTemp: Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
+    users.getIdealTemp(request.user.userID).map { ts =>
+      ts.headOption match {
+        case Some(t) => Ok(Json.obj("temp" -> t))
+        case None => BadRequest
+      }
+    }
+  }
+
+  private def compareTemp(userID: String, value: Double): Unit = {
+    users.getIdealTemp(userID).map { ts =>
+      ts.headOption match {
+        case Some(t) =>
+          if(value > t)
+            actuators.sendToUserBridge(userID, "temperature low")
+          else if (value < t)
+            actuators.sendToUserBridge(userID, "temperature normal")
+          else
+            actuators.sendToUserBridge(userID, "temperature high")
+
+        case None =>
+      }
+    }
   }
 }

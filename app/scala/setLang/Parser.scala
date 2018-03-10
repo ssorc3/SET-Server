@@ -70,7 +70,7 @@ class Parser extends StandardTokenParsers
                                 "text"  ^^^ Text()                                    |
                                 "notification" ~> stringLit ^^ {s => Notification(s)} |
                                 "kettle" ~> powerSetting ^^ {a => Kettle(a)}          |
-                                "alarm" ^^^ Alarm()                                   |
+                                "alarm" ~> powerSetting ^^ {a => Alarm(a)}            |
                                 "plug" ~> powerSetting ^^ { a => Plug(a)}             |
                                 "lights" ~> powerSetting ^^ { a => Lights(a)}         |
                                 ("lightSetting" ~> bool) ~ ("," ~> numericLit) ~ ("," ~> numericLit) ^^ {case a ~ b ~ c => LightSetting(a, b.toInt, c.toInt)}

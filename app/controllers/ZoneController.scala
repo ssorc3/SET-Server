@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenticator
 import play.api.libs.json.JsValue
-import play.api.mvc.{AbstractController, Action, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.ZoneRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -21,7 +21,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     }
   }
 
-  def renameZone() = auth.JWTAuthentication.async(parse.json) { implicit request =>
+  def renameZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
     val currentName = (request.body \ "current").as[String]
     val newName = (request.body \ "new").as[String]
@@ -34,7 +34,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     }
   }
 
-  def deleteZone() = auth.JWTAuthentication.async(parse.json) {implicit request =>
+  def deleteZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
     val userID = request.user.userID
     val zoneName = (request.body \ "zoneName").as[String]
 
@@ -44,5 +44,10 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
         case None => Future.successful(BadRequest("Zone does not exist"))
       }
     }
+  }
+
+  def getZones: Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
+    val userID = request.user.userID
+    zones.getZones(userID).map(z => Ok(z))
   }
 }
