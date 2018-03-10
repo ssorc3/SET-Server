@@ -1,8 +1,9 @@
 package scala.setLang
 
-import org.mockito.Mock
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import services.ActuatorService
 
 import setLang.model.Statement
 
@@ -27,11 +28,137 @@ class TimeSpec extends PlaySpec with MockitoSugar{
     }
   }
 
-  "The interpreter" should{
+  "The interpreter" should {
     "evaluate time(\"00:00:00\") == time(\"00:00:00\") to true" in {
-      val script: String = "if(time(\"00:00:00\") == time(00:00:00))then alarm; end"
-      val interpreter = mock[Interpreter]
-      
+      val script: String = "if(time(\"00:00:00\") == time(\"00:00:00\"))then alarm; end"
+      val actuators = mock[ActuatorService]
+      val parser: Parser = new Parser
+      parser.parseAll(parser.program, script) match {
+        case parser.Success(r: List[Statement], _) =>
+          val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+          interpreter.run mustBe true
+      }
     }
-  }
+
+    "evaluate time(\"00:00:00\") == time(\"00:00:10\") to false" in {
+      val script: String = "if(time(\"00:00:00\") == time(\"00:00:10\"))then alarm; end"
+      val actuators = mock[ActuatorService]
+      val parser: Parser = new Parser
+      parser.parseAll(parser.program, script) match {
+        case parser.Success(r: List[Statement], _) =>
+          val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+          interpreter.run mustBe false
+      }
+    }
+
+      "evaluate time(\"00:00:00\") < time(\"00:00:10\") to true" in {
+        val script: String = "if(time(\"00:00:00\") < time(\"00:00:10\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe true
+        }
+      }
+
+    "evaluate time(\"00:00:10\") < time(\"00:00:00\") to false" in {
+        val script: String = "if(time(\"00:00:10\") < time(\"00:00:00\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe false
+        }
+      }
+
+      "evaluate time(\"00:00:00\") > time(\"00:00:10\") to false" in {
+        val script: String = "if(time(\"00:00:00\") > time(\"00:00:10\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe false
+        }
+      }
+
+    "evaluate time(\"00:00:10\") > time(\"00:00:00\") to true" in {
+        val script: String = "if(time(\"00:00:10\") > time(\"00:00:00\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe true
+        }
+      }
+
+      "evaluate time(\"00:00:00\") >= time(\"00:00:00\") to true" in {
+        val script: String = "if(time(\"00:00:00\") >= time(\"00:00:00\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe true
+        }
+      }
+
+      "evaluate time(\"00:00:00\") >= time(\"00:00:10\") to false" in {
+        val script: String = "if(time(\"00:00:00\") >= time(\"00:00:10\"))then alarm; end"
+        val actuators = mock[ActuatorService]
+        val parser: Parser = new Parser
+        parser.parseAll(parser.program, script) match {
+          case parser.Success(r: List[Statement], _) =>
+            val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+            interpreter.run mustBe false
+        }
+      }
+
+      "evaluate time(\"00:00:00\") <= time(\"00:00:00\") to true" in {
+          val script: String = "if(time(\"00:00:00\") <= time(\"00:00:00\"))then alarm; end"
+          val actuators = mock[ActuatorService]
+          val parser: Parser = new Parser
+          parser.parseAll(parser.program, script) match {
+            case parser.Success(r: List[Statement], _) =>
+              val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+              interpreter.run mustBe true
+          }
+        }
+
+        "evaluate time(\"00:00:10\") <= time(\"00:00:00\") to false" in {
+          val script: String = "if(time(\"00:00:10\") <= time(\"00:00:00\"))then alarm; end"
+          val actuators = mock[ActuatorService]
+          val parser: Parser = new Parser
+          parser.parseAll(parser.program, script) match {
+            case parser.Success(r: List[Statement], _) =>
+              val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+              interpreter.run mustBe false
+          }
+        }
+
+      "evaluate time(\"00:00:00\") != time(\"00:00:10\") to true" in {
+          val script: String = "if(time(\"00:00:00\") != time(\"00:00:10\"))then alarm; end"
+          val actuators = mock[ActuatorService]
+          val parser: Parser = new Parser
+          parser.parseAll(parser.program, script) match {
+            case parser.Success(r: List[Statement], _) =>
+              val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+              interpreter.run mustBe true
+          }
+        }
+
+        "evaluate time(\"00:00:00\") != time(\"00:00:00\") to false" in {
+          val script: String = "if(time(\"00:00:00\") != time(\"00:00:00\"))then alarm; end"
+          val actuators = mock[ActuatorService]
+          val parser: Parser = new Parser
+          parser.parseAll(parser.program, script) match {
+            case parser.Success(r: List[Statement], _) =>
+              val interpreter: Interpreter = new Interpreter(r, "", actuators, 0, 0, 0, 0)
+              interpreter.run mustBe false
+          }
+        }
+    }
 }

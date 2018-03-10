@@ -48,6 +48,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  // TODO: def signalUserDevice(deviceID: String): Action[AnyContent] = auth.JWTAuthentication.async
+
   // /sensor/{type}/{deviceID}
   def receiveTemperature(deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
     devices.exists(deviceID).flatMap{
