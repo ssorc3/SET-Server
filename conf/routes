@@ -40,6 +40,10 @@ POST    /sensor/3/:deviceID         controllers.SensorController.receiveNoise(de
 GET     /sensor/3/:deviceID         controllers.SensorController.getNoise(deviceID, page: Int ?= 1)
 GET     /sensor/3/:deviceID/:time   controllers.SensorController.getTimeNoise(deviceID, time)
 
+#ZoneController
+POST    /zone                       controllers.ZoneController.createZone
+PUT     /zone                       controllers.ZoneController.rename
+
 #ActuatorController
 POST    /actuator/kettle            controllers.ActuatorController.setKettle
 POST    /actuator/lights            controllers.ActuatorController.setLights

@@ -21,7 +21,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     }
   }
 
-  def rename(zoneName: String) = auth.JWTAuthentication.async(parse.json) {implicit request =>
+  def rename() = auth.JWTAuthentication.async(parse.json) {implicit request =>
     val userID = request.user.userID
     val currentName = (request.body \ "current").as[String]
     val newName = (request.body \ "new").as[String]
