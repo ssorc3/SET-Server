@@ -8,7 +8,7 @@ import scala.setLang.model._
 import scala.concurrent.ExecutionContext
 
 class Interpreter(program: List[Statement], userID: String, actuators: ActuatorService, temperatureValue: Double, humidityValue: Double,
-                  lightValue: Double, noiseValue: Int)(implicit ec: ExecutionContext)
+                  lightValue: Double, noiseValue: Double)(implicit ec: ExecutionContext)
 {
   def run(): Boolean = {
     var result: Boolean = false

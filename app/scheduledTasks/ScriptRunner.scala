@@ -36,7 +36,7 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
     val temperature: Double = Await.result(sensors.getLatestUserTemperature(userID), Duration.Inf).headOption.getOrElse(0)
     val humidity: Double = Await.result(sensors.getLatestUserHumidity(userID), Duration.Inf).headOption.getOrElse(0)
     val light: Double = Await.result(sensors.getLatestUserLight(userID), Duration.Inf).headOption.getOrElse(0)
-    val noise: Int = Await.result(sensors.getLatestUserNoise(userID), Duration.Inf).headOption.getOrElse(0)
+    val noise: Double = Await.result(sensors.getLatestUserNoise(userID), Duration.Inf).headOption.getOrElse(0)
 
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
