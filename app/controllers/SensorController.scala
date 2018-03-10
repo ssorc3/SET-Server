@@ -58,7 +58,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
 
   def signalUserDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val req: WSRequest = ws.url("https://api.particle.io/v1/devices/" + deviceID)
-    val signal: Int = if ((request.body \ "signal").asOpt[Boolean].getOrElse(false)) 1 else 0
+    val signal: String = if ((request.body \ "signal").asOpt[Boolean].getOrElse(false)) "1" else "0"
     val result = req.put(Map("signal" -> signal, "access_token" -> config.get[String]("particle_access_token")))
     result.map(_ => Ok)
   }
