@@ -91,9 +91,9 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 
   def idealTemps = TableQuery[IdealTempTable]
 
-  def setIdealTemp(userID: String, temp: Double): Future[Any] = db.run {
-    idealTemps.filter(_.userID === userID).delete
-    idealTemps += IdealTemp(userID, temp)
+  def setIdealTemp(userID: String, temp: Double): Future[Any] = {
+    db.run(idealTemps.filter(_.userID === userID).delete)
+    db.run(idealTemps += IdealTemp(userID, temp))
   }
 
   def getIdealTemp(userID: String): Future[Seq[Double]] = db.run {
