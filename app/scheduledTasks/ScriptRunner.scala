@@ -22,7 +22,10 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
 
   actorSystem.scheduler.schedule(initialDelay = 0.seconds, interval = 2.seconds) {
     users.list.map{u =>
-      u.foreach(x => scriptRunner.runScript(x.userID, "default"))
+      u.foreach(x => {
+        println("running script \"default\" for " + x.username)
+        scriptRunner.runScript(x.userID, "default")
+      })
 
     }
   }
