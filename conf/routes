@@ -31,7 +31,7 @@ GET     /sensor/2/:deviceID/:time               controllers.SensorController.get
 GET     /sensor/3/:deviceID/:time               controllers.SensorController.getTimeNoise(deviceID, time)
 POST    /sensor/motion/:deviceID                controllers.SensorController.motionDetected(deviceID)
 POST    /idealtemp                              controllers.SensorController.setIdealTemp
-GET     /idealTemp                              controllers.SensorController.getIdealTemp
+GET     /idealtemp                              controllers.SensorController.getIdealTemp
 
 GET     /flashPhoton/:deviceID                  controllers.SensorController.signalUserDevice(deviceID)
 
