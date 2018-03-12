@@ -3,7 +3,9 @@ organization := "com.SET"
 
 version := "2.6.x"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
+  watchSources ++= (baseDirectory.value / "public/ui" ** "*").get
+)
 
 scalaVersion := "2.12.4"
 

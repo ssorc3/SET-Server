@@ -11,5 +11,5 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class AdminController @Inject() (assets: Assets, errorHandler: HttpErrorHandler, config: Configuration, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc)
 {
-  def index: Action[AnyContent] = Action(Ok)
+  def index: Action[AnyContent] = assets.at("index.html")
 }
