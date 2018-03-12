@@ -180,13 +180,10 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     users.getIdealTemp(userID).map { ts =>
       ts.headOption match {
         case Some(t) =>
-          println("ideal: " + t)
-          println("value: " + value)
-          if (value > t + 2) {
+          if (value + 2 < t) {
             actuators.sendToUserBridge(userID, "temperature low")
           }
-          else if (value < t - 2) {
-            println("Temperature high")
+          else if (value - 2 > t) {
           actuators.sendToUserBridge(userID, "temperature high")
           }
           else {
