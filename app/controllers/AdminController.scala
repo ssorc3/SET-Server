@@ -10,6 +10,6 @@ import scala.concurrent.ExecutionContext
 class AdminController @Inject() (cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc)
 {
   def index(): Action[AnyContent] = Action{ implicit request =>
-    Ok(views.html.admin)
+    Ok(views.html.admin())
   }
 }
