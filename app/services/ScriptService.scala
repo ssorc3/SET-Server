@@ -27,8 +27,10 @@ class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepo
       case parser.Success(r: List[Statement], _) =>
         val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise)
         try{
-          if(interpreter.run())
+          if(interpreter.run()) {
+            println("Script ran successfully")
             scripts.updateLastRun(userID, System.currentTimeMillis())
+          }
         }
         catch{
           case e: Exception => println(e.getMessage)
