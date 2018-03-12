@@ -2,7 +2,7 @@
 GET     /                                       controllers.HomeController.index
 
 #AdminController
-GET     /admin                                  controllers.AdminController.index
+GET     /admin                                   controllers.AdminController.index
 
 #UserController
 POST    /token                                  controllers.UserController.getToken
