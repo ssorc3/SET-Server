@@ -23,8 +23,8 @@ PUT     /device/:deviceID                       controllers.SensorController.ren
 POST    /device/:deviceID                       controllers.SensorController.registerDevice(deviceID)
 DELETE  /device/:deviceID                       controllers.SensorController.deleteUserDevice(deviceID)
 
-POST    /sensor/$sensorType<[0-3]>/:deviceID      controllers.SensorController.receiveData(sensorType: Int, deviceID)
-GET     /sensor/$sensorType<[0-3]>/:deviceID      controllers.SensorController.getData(sensorType: Int, deviceID, page: Int ?= 1)
+POST    /sensor/$sensorType<[0-3]>/:deviceID    controllers.SensorController.receiveData(sensorType: Int, deviceID)
+GET     /sensor/$sensorType<[0-3]>/:deviceID    controllers.SensorController.getData(sensorType: Int, deviceID, page: Int ?= 1)
 GET     /sensor/0/:deviceID/:time               controllers.SensorController.getTimeTemperature(deviceID, time)
 GET     /sensor/1/:deviceID/:time               controllers.SensorController.getTimeHumidity(deviceID, time)
 GET     /sensor/2/:deviceID/:time               controllers.SensorController.getTimeLight(deviceID, time)
@@ -32,6 +32,8 @@ GET     /sensor/3/:deviceID/:time               controllers.SensorController.get
 POST    /sensor/motion/:deviceID                controllers.SensorController.motionDetected(deviceID)
 POST    /idealtemp                              controllers.SensorController.setIdealTemp
 GET     /idealTemp                              controllers.SensorController.getIdealTemp
+
+GET     /flashPhoton                            controllers.SensorController.signalUserDevice
 
 #ZoneController
 POST    /zone                                   controllers.ZoneController.createZone
