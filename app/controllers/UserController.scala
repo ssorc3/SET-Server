@@ -24,6 +24,7 @@ class UserController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, repo:
     }
   }
 
+  def getUsers: Action
 
   def getToken: Action[JsValue] = Action.async(parse.json) { implicit request =>
     val username = (request.body \ "username").toOption.fold("")(_.as[String])
