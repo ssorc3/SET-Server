@@ -182,14 +182,14 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         case Some(t) =>
           println("ideal: " + t)
           println("value: " + value)
-          if (value > t) {
+          if (value > t + 2) {
             actuators.sendToUserBridge(userID, "temperature low")
           }
-          else if (value < t) {
-          actuators.sendToUserBridge(userID, "temperature normal")
+          else if (value < t - 2) {
+          actuators.sendToUserBridge(userID, "temperature high")
           }
           else {
-            actuators.sendToUserBridge(userID, "temperature high")
+            actuators.sendToUserBridge(userID, "temperature normal")
           }
 
         case None =>
