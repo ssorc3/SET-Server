@@ -33,7 +33,7 @@ POST    /sensor/motion/:deviceID                controllers.SensorController.mot
 POST    /idealtemp                              controllers.SensorController.setIdealTemp
 GET     /idealTemp                              controllers.SensorController.getIdealTemp
 
-GET     /flashPhoton/:deviceID                            controllers.SensorController.signalUserDevice(deviceID)
+GET     /flashPhoton/:deviceID                  controllers.SensorController.signalUserDevice(deviceID)
 
 #ZoneController
 POST    /zone                                   controllers.ZoneController.createZone

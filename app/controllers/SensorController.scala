@@ -59,7 +59,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   def signalUserDevice(deviceID: String): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
     val req: WSRequest = ws.url("https://api.particle.io/v1/devices/" + deviceID + "/flash")
     val result = req.put(Map("arg" -> "", "access_token" -> config.get[String]("particle_access_token")))
-    result.map(_ => Ok)
+    result.map(r => Ok(Json.obj("result" -> r.status)))
   }
 
   def receiveData(sensorType: Int, deviceID: String): Action[JsValue] = Action.async(parse.tolerantJson) {implicit request =>
