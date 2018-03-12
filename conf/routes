@@ -44,3 +44,5 @@ POST    /actuator/kettle                        controllers.ActuatorController.s
 POST    /actuator/lights                        controllers.ActuatorController.setLights
 POST    /actuator/plug                          controllers.ActuatorController.setPlug
 POST    /actuator/alarm                         controllers.ActuatorController.Alarm
+
+GET     /*file                                  controllers.AdminController.assetOrDefault(file)
