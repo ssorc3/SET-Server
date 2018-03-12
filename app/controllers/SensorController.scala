@@ -186,6 +186,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
             actuators.sendToUserBridge(userID, "temperature low")
           }
           else if (value < t - 2) {
+            println("Temperature high")
           actuators.sendToUserBridge(userID, "temperature high")
           }
           else {
