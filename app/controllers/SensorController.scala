@@ -181,15 +181,12 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       ts.headOption match {
         case Some(t) =>
           if (value > t) {
-            print("Temperature low")
             actuators.sendToUserBridge(userID, "temperature low")
           }
           else if (value < t) {
-          print("Temperature normal")
           actuators.sendToUserBridge(userID, "temperature normal")
           }
           else {
-            print("Temperature high")
             actuators.sendToUserBridge(userID, "temperature high")
           }
 
