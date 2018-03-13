@@ -217,7 +217,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       }
       else
       {
-          ""
+        println("response code: " + response.status)
+        ""
       }
     )
   }
