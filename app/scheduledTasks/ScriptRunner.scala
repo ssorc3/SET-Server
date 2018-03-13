@@ -25,7 +25,6 @@ class ScriptRunner @Inject()(actorSystem: ActorSystem, scripts: ScriptRepository
       u.foreach(x => {
         scriptRunner.runScript(x.userID, "default")
       })
-
     }
   }
 

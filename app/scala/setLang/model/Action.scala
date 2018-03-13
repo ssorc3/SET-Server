@@ -4,8 +4,6 @@ import scala.setLang.model.PowerSetting.PowerSetting
 
 abstract class Action
 
-case class Email() extends Action
-case class Text() extends Action
 case class Notification(body: String) extends Action
 case class Alarm(command: PowerSetting) extends Action
 case class Kettle(command: PowerSetting) extends Action

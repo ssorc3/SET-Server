@@ -16,14 +16,6 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
       if (walkConditional(statement.condition)) {
         for (action: Action <- statement.actions) {
           action match {
-            case Email() =>
-              //Can't email yet
-              return false
-
-            case Text() =>
-              //Can't text yet
-
-
             case Notification(s) =>
               actuators.sendNotification(userID, s)
               result=true

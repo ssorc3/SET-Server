@@ -44,4 +44,39 @@ class SecuredAuthenticator @Inject()(jwtUtil: JWTUtil, repo: UserRepository, cc:
         Future.successful(Unauthorized("Invalid Credentials"))
     }
   }
+
+  object AdminAuthentication extends ActionBuilder[UserRequest, AnyContent]
+  {
+    override protected def executionContext: ExecutionContext = cc.executionContext
+    override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+
+    override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] =
+    {
+      val jwtToken = request.headers.get("jw_token").getOrElse("")
+
+      if(jwtUtil.isValidToken(jwtToken))
+      {
+          jwtUtil.decodePayload(jwtToken).fold{
+            Future.successful(Unauthorized("Invalid Credentials"))
+          }
+        {payload =>
+          val userCredentials = Json.parse(payload).validate[User].get
+          if(userCredentials.username == "Test")
+          {
+            repo.getUserID(userCredentials.username).flatMap{id =>
+                block(UserRequest(UserInfo(userCredentials.username, id), request))
+              }
+          }
+          else
+          {
+            Future.successful(Unauthorized("Invalid Credentials"))
+          }
+        }
+      }
+      else
+      {
+        Future.successful(Unauthorized("Invalid Credentials"))
+      }
+    }
+  }
 }

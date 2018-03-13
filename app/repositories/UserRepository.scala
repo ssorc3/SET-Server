@@ -68,6 +68,10 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     }
   }
 
+  def getAllUsers(): Future[Seq[User]] = db.run{
+    users.result
+  }
+
   def isValidAsync(username: String, password: String): Future[Boolean] = {
     getUsers(username).map { us =>
       us.headOption match {

@@ -1,6 +1,10 @@
 #HomeController
 GET     /                                       controllers.HomeController.index
 
+#AdminController
+GET     /admin/users                            controllers.AdminController.getAllUsers
+POST    /admin/script                           controllers.AdminController.setAdminScript
+
 #UserController
 POST    /token                                  controllers.UserController.getToken
 POST    /create                                 controllers.UserController.createUser
@@ -12,6 +16,7 @@ GET     /bridgeWS                               controllers.BridgeController.bri
 POST    /script                                 controllers.ScriptController.addScript
 DELETE  /script                                 controllers.ScriptController.removeScript
 GET     /script                                 controllers.ScriptController.getScripts
+GET     /script/preset                          controllers.ScriptController.getAdminScripts
 POST    /script/check                           controllers.ScriptController.checkScript
 
 #SensorController

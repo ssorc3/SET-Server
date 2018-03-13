@@ -66,9 +66,7 @@ class Parser extends StandardTokenParsers
                                   "==" |
                                   "!="
 
-  def action: Parser[Action] = "email"  ^^^ Email()                                   |
-                                "text"  ^^^ Text()                                    |
-                                "notification" ~> stringLit ^^ {s => Notification(s)} |
+  def action: Parser[Action] =  "notification" ~> stringLit ^^ {s => Notification(s)} |
                                 "kettle" ~> powerSetting ^^ {a => Kettle(a)}          |
                                 "alarm" ~> powerSetting ^^ {a => Alarm(a)}            |
                                 "plug" ~> powerSetting ^^ { a => Plug(a)}             |

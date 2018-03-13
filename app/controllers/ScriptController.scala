@@ -47,4 +47,8 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
       case _ => Ok("<h1>There's been an error with our compiler. Please try again later</h1>")
     }
   }
+
+  def getAdminScripts(): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) { implicit request =>
+    scripts.getUserScripts("Admin").map(s => Ok(s))
+  }
 }
