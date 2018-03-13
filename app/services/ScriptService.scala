@@ -17,7 +17,7 @@ class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepo
     val lastRun: Long = Await.result(scripts.getUserLastRun(userID), Duration.Inf).headOption.getOrElse(0L)
     if(script == "" || ((System.currentTimeMillis()/1000) - lastRun) < 12*60*60)
      {
-       println(System.currentTimeMillis() / 1000 + "<" + 12*60*60)
+       println((System.currentTimeMillis() / 1000 - lastRun) + "<" + 12*60*60)
        return
       }
     val temperature: Double = Await.result(sensors.getLatestUserTemperature(userID), Duration.Inf).headOption.getOrElse(0)
