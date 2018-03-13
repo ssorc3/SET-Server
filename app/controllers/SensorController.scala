@@ -172,26 +172,17 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   }
 
   def motionDetected(deviceID: String): Action[AnyContent] = Action.async(parse.default) { implicit request =>
-    println("Motion detected by " + deviceID)
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
-          println("Got owner " + o)
           users.usernameByID(o).map { username: Option[String] =>
             getUserCurrentZone(username.getOrElse("")).map { zone =>
-              println("Current zone: " + zone)
               if (zone != "") {
                 devices.getDeviceZone(deviceID).map { zID =>
                   if (zID.head != -1) {
-                    println("ID != -1")
                     zones.getName(zID.head).map { zName =>
-                      println("zoneName: " + zName)
                       if (zName.toLowerCase != zone.toLowerCase) {
-                        println("Run script")
                         scriptRunner.runScript(o, "motion")
-                      }
-                      else {
-                        println(zName.toLowerCase + " == " + zone.toLowerCase)
                       }
                     }
                   }
