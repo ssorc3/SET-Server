@@ -157,13 +157,16 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
+          println("Got owner " + o)
           val zone: String = getUserCurrentZone(o)
           devices.getDeviceZone(deviceID).map{ zID =>
             if(zID.head != -1)
             {
+                println("ID != -1")
                 zones.getName(zID.head).map{ zName =>
                   if(zName != zone)
                   {
+                    println("Run script")
                     scriptRunner.runScript(o, "motion")
                   }
                   else
