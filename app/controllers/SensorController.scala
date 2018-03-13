@@ -185,6 +185,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                   if (zID.head != -1) {
                     println("ID != -1")
                     zones.getName(zID.head).map { zName =>
+                      println("zoneName: " + zName)
                       if (zName != zone) {
                         println("Run script")
                         scriptRunner.runScript(o, "motion")
