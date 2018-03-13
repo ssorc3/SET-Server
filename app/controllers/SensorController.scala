@@ -207,20 +207,15 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   private def getUserCurrentZone(username: String): Future[String] = {
     val request: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&user=" + username)
     request.get().map(response => {
-      println("Response: " + response.status)
-      println("Message: " + (response.json \ "message").as[String])
-      println("Response success: " + (response.json \ "users" \ username \\ "location").head.as[String])
       if (response.status == 200) {
         if ((response.json \ "success").as[Boolean]) {
-          (response.json \ "users" \ username \ "location").as[String]
+          (response.json \ "users" \ username \\ "location").head.as[String]
         }
         else {
-          println((response.json \ "message").as[String])
           ""
         }
       }
       else {
-        println("response code: " + response.status)
         ""
       }
     }
