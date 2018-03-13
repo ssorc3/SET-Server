@@ -209,7 +209,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     request.get().map(response => {
       println("Response: " + response.status)
       println("Message: " + (response.json \ "message").as[String])
-      println("Response success: " + (response.json \ "users" \ username \\ "location"))
+      println("Response success: " + (response.json \ "users" \ username \\ "location").head.as[String])
       if (response.status == 200) {
         if ((response.json \ "success").as[Boolean]) {
           (response.json \ "users" \ username \ "location").as[String]
