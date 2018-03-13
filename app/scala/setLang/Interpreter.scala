@@ -37,7 +37,7 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
               result = true
 
             case LightSetting(zone, isWhite, hue, brightness) =>
-              actuators.setLightSetting(zone, userID, isWhite, hue, brightness)
+              actuators.setLightSetting(userID, zone, isWhite, hue, brightness)
               result=true
 
             case Lights(command) =>

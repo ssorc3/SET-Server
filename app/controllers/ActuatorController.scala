@@ -22,11 +22,12 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
 
   def setLights(): Action[JsValue] = auth.JWTAuthentication(parse.json) {implicit request =>
     val userID = request.user.userID
+    val zone = (request.body \ "zone").asOpt[Int].getOrElse(0)
     val isWhite: Boolean = (request.body \ "isWhite").asOpt[Boolean].getOrElse(false)
     val hue: Int = (request.body \ "hue").asOpt[Int].getOrElse(255)
     val brightness: Int = (request.body \ "brightness").asOpt[Int].getOrElse(255)
     actuators.changeLightPowerSetting(userID, PowerSetting.ON)
-    actuators.setLightSetting(userID, isWhite, hue, brightness)
+    actuators.setLightSetting(userID, zone, isWhite, hue, brightness)
     Ok
   }
 
