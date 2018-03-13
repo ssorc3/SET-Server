@@ -11,7 +11,7 @@ case class Alarm(command: PowerSetting) extends Action
 case class Kettle(command: PowerSetting) extends Action
 case class Plug(command: PowerSetting) extends Action
 case class Lights(command: PowerSetting) extends Action
-case class LightSetting(isWhite: Boolean, hue: Int, brightness: Int) extends Action
+case class LightSetting(zone: Int, isWhite: Boolean, hue: Int, brightness: Int) extends Action
 
 object PowerSetting extends Enumeration{
   type PowerSetting = Value

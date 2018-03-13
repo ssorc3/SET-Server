@@ -36,8 +36,8 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
               actuators.changeKettlePowerSetting(userID, command)
               result = true
 
-            case LightSetting(isWhite, hue, brightness) =>
-              actuators.setLightSetting(userID, isWhite, hue, brightness)
+            case LightSetting(zone, isWhite, hue, brightness) =>
+              actuators.setLightSetting(zone, userID, isWhite, hue, brightness)
               result=true
 
             case Lights(command) =>

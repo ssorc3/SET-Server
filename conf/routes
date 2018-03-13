@@ -1,9 +1,6 @@
 #HomeController
 GET     /                                       controllers.HomeController.index
 
-#AdminController
-GET     /admin                                  controllers.Assets.at(path="ui/public", file="index.html")
-
 #UserController
 POST    /token                                  controllers.UserController.getToken
 POST    /create                                 controllers.UserController.createUser
