@@ -153,6 +153,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   }
 
   def motionDetected(deviceID: String): Action[AnyContent] = Action.async(parse.default) { implicit request =>
+    println("Motion detected by " + deviceID)
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
