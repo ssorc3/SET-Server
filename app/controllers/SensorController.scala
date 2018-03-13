@@ -191,7 +191,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                         scriptRunner.runScript(o, "motion")
                       }
                       else {
-                        println(zName + "!=" + zone)
+                        println(zName.toLowerCase + " == " + zone.toLowerCase)
                       }
                     }
                   }
