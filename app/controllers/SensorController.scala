@@ -85,6 +85,25 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     }
   }
 
+  private def compareTemp(userID: String, value: Double): Unit = {
+    users.getIdealTemp(userID).map { ts =>
+      ts.headOption match {
+        case Some(t) =>
+          if (value + 2 < t) {
+            actuators.sendToUserBridge(userID, "temperature low")
+          }
+          else if (value - 2 > t) {
+          actuators.sendToUserBridge(userID, "temperature high")
+          }
+          else {
+            actuators.sendToUserBridge(userID, "temperature normal")
+          }
+
+        case None =>
+      }
+    }
+  }
+
   def getData(sensorType: Int, deviceID: String, page: Int): Action[AnyContent] = auth.JWTAuthentication.async(parse.default) {implicit request =>
     devices.deviceBelongsToUser(deviceID, request.user.userID).flatMap{
       case true =>
@@ -160,6 +179,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
           println("Got owner " + o)
           getUserCurrentZone(o).map { zone =>
             println("Current zone: " + zone)
+            if(zone != ""){
             devices.getDeviceZone(deviceID).map { zID =>
               if (zID.head != -1) {
                 println("ID != -1")
@@ -172,6 +192,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                     println(zName + "!=" + zone)
                   }
                 }
+              }
               }
             }
           }
@@ -190,7 +211,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         }
         else
         {
-            ""
+          println((response.json \ "message").as[String])
+          ""
         }
       }
       else
@@ -217,25 +239,6 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       ts.headOption match {
         case Some(t) => Ok(Json.obj("temp" -> t))
         case None => BadRequest
-      }
-    }
-  }
-
-  private def compareTemp(userID: String, value: Double): Unit = {
-    users.getIdealTemp(userID).map { ts =>
-      ts.headOption match {
-        case Some(t) =>
-          if (value + 2 < t) {
-            actuators.sendToUserBridge(userID, "temperature low")
-          }
-          else if (value - 2 > t) {
-          actuators.sendToUserBridge(userID, "temperature high")
-          }
-          else {
-            actuators.sendToUserBridge(userID, "temperature normal")
-          }
-
-        case None =>
       }
     }
   }
