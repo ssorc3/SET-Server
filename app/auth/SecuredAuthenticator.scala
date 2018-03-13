@@ -61,7 +61,7 @@ class SecuredAuthenticator @Inject()(jwtUtil: JWTUtil, repo: UserRepository, cc:
           }
         {payload =>
           val userCredentials = Json.parse(payload).validate[User].get
-          if(userCredentials.username == "Test")
+          if(userCredentials.username == "test")
           {
             repo.getUserID(userCredentials.username).flatMap{id =>
                 block(UserRequest(UserInfo(userCredentials.username, id), request))
