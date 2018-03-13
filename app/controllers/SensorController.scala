@@ -177,22 +177,24 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       os.headOption match {
         case Some(o) =>
           println("Got owner " + o)
-          getUserCurrentZone(o).map { zone =>
-            println("Current zone: " + zone)
-            if(zone != ""){
-            devices.getDeviceZone(deviceID).map { zID =>
-              if (zID.head != -1) {
-                println("ID != -1")
-                zones.getName(zID.head).map { zName =>
-                  if (zName != zone) {
-                    println("Run script")
-                    scriptRunner.runScript(o, "motion")
-                  }
-                  else {
-                    println(zName + "!=" + zone)
+          users.usernameByID(o).map { username: Option[String] =>
+            getUserCurrentZone(username.getOrElse("")).map { zone =>
+              println("Current zone: " + zone)
+              if (zone != "") {
+                devices.getDeviceZone(deviceID).map { zID =>
+                  if (zID.head != -1) {
+                    println("ID != -1")
+                    zones.getName(zID.head).map { zName =>
+                      if (zName != zone) {
+                        println("Run script")
+                        scriptRunner.runScript(o, "motion")
+                      }
+                      else {
+                        println(zName + "!=" + zone)
+                      }
+                    }
                   }
                 }
-              }
               }
             }
           }
