@@ -158,23 +158,21 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       os.headOption match {
         case Some(o) =>
           println("Got owner " + o)
-          val zone: String = getUserCurrentZone(o)
-          println("Current zone: " + zone)
-          devices.getDeviceZone(deviceID).map{ zID =>
-            if(zID.head != -1)
-            {
+          getUserCurrentZone(o).map { zone =>
+            println("Current zone: " + zone)
+            devices.getDeviceZone(deviceID).map { zID =>
+              if (zID.head != -1) {
                 println("ID != -1")
-                zones.getName(zID.head).map{ zName =>
-                  if(zName != zone)
-                  {
+                zones.getName(zID.head).map { zName =>
+                  if (zName != zone) {
                     println("Run script")
                     scriptRunner.runScript(o, "motion")
                   }
-                  else
-                  {
+                  else {
                     println(zName + "!=" + zone)
                   }
                 }
+              }
             }
           }
         case None =>
@@ -183,15 +181,18 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     Future.successful(Ok)
   }
 
-  private def getUserCurrentZone(username: String): String = {
+  private def getUserCurrentZone(username: String): Future[String] = {
     val request: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=" + username + "&user=" + username)
     request.get().map(response =>
       if(response.status == 200) {
         println("GOt response")
-        return (response.json \ "users" \ username \ "location").as[String]
+        (response.json \ "users" \ username \ "location").as[String]
+      }
+      else
+      {
+        ""
       }
     )
-    ""
   }
 
   def assignZone(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
