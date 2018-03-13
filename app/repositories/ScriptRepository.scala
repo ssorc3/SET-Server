@@ -40,7 +40,7 @@ class ScriptRepository @Inject() (protected val dbConfigProvider: DatabaseConfig
     scripts.filter(_.userID === userID).result
   }
 
-  def getUserLastRun(userID: String): Future[Seq[Long]] = db.run {
-    scripts.filter(_.userID === userID).map(_.lastRun).result
+  def getUserLastRun(userID: String, scriptName: String): Future[Seq[Long]] = db.run {
+    scripts.filter(s => s.userID === userID && s.scriptName === scriptName).map(_.lastRun).result
   }
 }
