@@ -1,5 +1,43 @@
 # SET-Server
 
+## Admin
+### Get All Users:
+`GET /admin/user`<br>
+Sample Response: <br>
+```
+[
+{
+  "userID": "00000000-0000-0000-0000-0000000000000",
+  "username": "test",
+  "hash": "0uathu049ighn3thpukrkucg039yhintuich.09ig0.8"
+},
+...
+]
+```
+requires Admin token<br>
+
+### Delete User:
+`DELETE /admin/user`<br>
+Sample Request:<br>
+```
+{
+  "userID": "1234"
+}
+```
+requires admin token<br>
+
+### Set an admin script:
+`POST /admin/script`<br>
+Sample Request: <br>
+```
+{
+  "scriptName": "default",
+  "script": "if(light > 2)then end"
+}
+```
+scriptName is optional<br>
+requires admin token<br>
+
 ## User
 ### Create User: 
 `POST /create`<br>
@@ -96,9 +134,11 @@ Sample Response:<br>
 Sample Request:<br>
 ```
 {
+  "scriptName": "default",
   "script": "if(temperature < 20 & noise > 400) then kettle; end"
 }
 ```
+scriptName is optional
 requires user token<br>
 
 ### Get a user's script:
@@ -149,6 +189,43 @@ Sample request:
 ```
 returns OK<br>
 requires token
+
+## Signaling a photon
+`GET /flashPhoton/:deviceID`<br>
+returns 200
+
+## Zones
+### Create zone
+`POST /zone`<br>
+Sample Request:
+```
+{
+  "zoneName": "Zone 1"
+}
+```
+
+### Delete zone
+`DELETE /zone`<br>
+Sample Request:
+```
+{
+  "zoneName": "Zone 1"
+}
+```
+
+### Get zones
+`GET /zone` <br>
+Sample response:
+```
+[
+{
+  "id": "0",
+  "userID": "00000000-0000-0000-0000-0000000000000",
+  "name": "Zone 1"
+},
+...
+]
+```
 
 ## Bridges
 ### WebSocket
