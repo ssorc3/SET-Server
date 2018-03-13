@@ -26,7 +26,6 @@ class ActuatorController @Inject()(cc: ControllerComponents, auth: SecuredAuthen
     val isWhite: Boolean = (request.body \ "isWhite").asOpt[Boolean].getOrElse(false)
     val hue: Int = (request.body \ "hue").asOpt[Int].getOrElse(255)
     val brightness: Int = (request.body \ "brightness").asOpt[Int].getOrElse(255)
-    actuators.changeLightPowerSetting(userID, PowerSetting.ON)
     actuators.setLightSetting(userID, zone, isWhite, hue, brightness)
     Ok
   }

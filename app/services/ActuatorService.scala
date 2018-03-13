@@ -37,7 +37,7 @@ class ActuatorService @Inject()(devices: DeviceRepository, users: UserRepository
   }
 
   def setLightSetting(userID: String, zone: Int, isWhite: Boolean, hue: Int, brightness: Int): Unit = {
-    sendToUserBridge(userID, "lightSetting " + zone + " " + isWhite  + " " + hue + " " + brightness)
+    sendToUserBridge(userID, "lights" + zone + " " + isWhite  + " " + hue + " " + brightness)
   }
 
   def changeLightPowerSetting(userID: String, command: PowerSetting): Unit = {
