@@ -14,7 +14,7 @@ class ZoneRepository @Inject() (protected val dbConfigProvider: DatabaseConfigPr
 
   class ZoneTable(tag: Tag) extends Table[Zone](tag, "zones")
   {
-    def id = column[Int]("zoneID", O.PrimaryKey)
+    def id = column[Int]("zoneID", O.PrimaryKey, O.AutoInc)
     def userID = column[String]("userID")
     def zoneName = column[String]("deviceID")
 
