@@ -159,6 +159,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         case Some(o) =>
           println("Got owner " + o)
           val zone: String = getUserCurrentZone(o)
+          println("Current zone: " + zone)
           devices.getDeviceZone(deviceID).map{ zID =>
             if(zID.head != -1)
             {
