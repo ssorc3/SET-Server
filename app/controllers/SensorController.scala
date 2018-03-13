@@ -206,7 +206,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     val request: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&user=" + username)
     request.get().map(response => {
       println("Response: " + response.status)
-      println("Response success: " + (response.json \ "users" \ username).as[String])
+      println("Response success: " + (response.json \ "users" \ username))
       if (response.status == 200) {
         if ((response.json \ "success").as[Boolean]) {
           (response.json \ "users" \ username \ "location").as[String]
