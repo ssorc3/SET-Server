@@ -185,12 +185,13 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     val request: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=" + username + "&user=" + username)
     request.get().map(response =>
       if(response.status == 200) {
-        println("GOt response")
-        (response.json \ "users" \ username \ "location").as[String]
+        val zone = (response.json \ "users" \ username \ "location").as[String]
+        println("zone = " = zone)
+        zone
       }
       else
       {
-        ""
+          ""
       }
     )
   }
