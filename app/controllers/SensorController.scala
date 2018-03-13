@@ -186,7 +186,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     request.get().map(response =>
       if(response.status == 200) {
         val zone = (response.json \ "users" \ username \ "location").as[String]
-        println("zone = " = zone)
+        println("zone = " + zone)
         zone
       }
       else
