@@ -27,6 +27,10 @@ class DeviceRepository @Inject()(protected val dbConfigProvider:DatabaseConfigPr
     devices += Device(deviceID, userID, deviceName, -1)
   }
 
+  def getDeviceZone(deviceID: String): Future[Seq[Int]] = db.run {
+    devices.filter(_.deviceID === deviceID).map(_.zoneID).result
+  }
+
   def assignZone(deviceID: String, userID: String, zoneID: Int): Future[Any] = db.run {
     devices.filter(d => d.deviceID === deviceID && d.userID === userID).map(_.zoneID).update(zoneID)
   }

@@ -9,7 +9,7 @@ import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc._
-import repositories.{DeviceRepository, ScriptRepository, SensorDataRepository, UserRepository}
+import repositories._
 import services.{ActuatorService, ScriptService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,7 +19,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                                  devices: DeviceRepository, sensors: SensorDataRepository,
                                  scripts: ScriptRepository, ws: WSClient,
                                  config: Configuration, scriptRunner: ScriptService,
-                                 users: UserRepository, actuators: ActuatorService)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
+                                 users: UserRepository, actuators: ActuatorService,
+                                 zones: ZoneRepository)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc){
 
   def registerDevice(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
@@ -155,11 +156,35 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
-          scriptRunner.runScript(o, "motion")
+          val zone: String = getUserCurrentZone(o)
+          devices.getDeviceZone(deviceID).map{ zID =>
+            if(zID.head != -1)
+            {
+                zones.getName(zID.head).map{ zName =>
+                  if(zName != zone)
+                  {
+                    scriptRunner.runScript(o, "motion")
+                  }
+                  else
+                  {
+                    println(zName + "!=" + zone)
+                  }
+                }
+            }
+          }
         case None =>
       }
     }
     Future.successful(Ok)
+  }
+
+  private def getUserCurrentZone(username: String): String = {
+    val request: WSRequest = ws.url("localhost:8000/location?group=" + username + "&user=" + username)
+    request.get().map(response =>
+      if(response.status == 200)
+        return (response.json \ "users" \ username \ "location").as[String]
+    )
+    ""
   }
 
   def setIdealTemp(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>

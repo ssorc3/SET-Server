@@ -4,12 +4,13 @@ import javax.inject.Inject
 
 import auth.SecuredAuthenticator
 import play.api.libs.json.JsValue
+import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.ZoneRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, zones: ZoneRepository)(implicit ec: ExecutionContext) extends AbstractController(cc)
+class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, zones: ZoneRepository, ws: WSClient)(implicit ec: ExecutionContext) extends AbstractController(cc)
 {
   def createZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
@@ -50,4 +51,6 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     val userID = request.user.userID
     zones.getZones(userID).map(z => Ok(z))
   }
+
+
 }
