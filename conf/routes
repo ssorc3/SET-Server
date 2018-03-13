@@ -2,7 +2,8 @@
 GET     /                                       controllers.HomeController.index
 
 #AdminController
-GET     /admin/users                            controllers.AdminController.getAllUsers
+GET     /admin/user                             controllers.AdminController.getAllUsers
+DELETE  /admin/user                             controllers.AdminController.deleteUser
 POST    /admin/script                           controllers.AdminController.setAdminScript
 
 #UserController

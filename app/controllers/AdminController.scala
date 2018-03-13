@@ -28,4 +28,14 @@ class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthentic
   def getAllUsers(): Action[AnyContent] = auth.AdminAuthentication.async(parse.default) {implicit request =>
     users.getAllUsers().map(u => Ok(u))
   }
+
+  def deleteUser(): Action[JsValue] = auth.AdminAuthentication.async(parse.json) { implicit request =>
+    (request.body \ "username").asOpt[String].fold{
+      Future.successful(BadRequest("Please specify a username"))
+    }
+    { username =>
+      users.deleteUser(username)
+      Future.successful(Ok("Deleted user " + username))
+    }
+  }
 }

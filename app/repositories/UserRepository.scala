@@ -72,6 +72,10 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     users.result
   }
 
+  def deleteUser(username: String): Future[Any] = db.run{
+   users.filter(_.username === username).delete
+  }
+
   def isValidAsync(username: String, password: String): Future[Boolean] = {
     getUsers(username).map { us =>
       us.headOption match {
