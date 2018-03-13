@@ -25,6 +25,7 @@ GET     /device                                 controllers.SensorController.get
 PUT     /device/:deviceID                       controllers.SensorController.rename(deviceID)
 POST    /device/:deviceID                       controllers.SensorController.registerDevice(deviceID)
 DELETE  /device/:deviceID                       controllers.SensorController.deleteUserDevice(deviceID)
+POST    /device/:deviceID/zone                  controllers.SensorController.assignZone(deviceID)
 
 POST    /sensor/$sensorType<[0-3]>/:deviceID    controllers.SensorController.receiveData(sensorType: Int, deviceID)
 GET     /sensor/$sensorType<[0-3]>/:deviceID    controllers.SensorController.getData(sensorType: Int, deviceID, page: Int ?= 1)

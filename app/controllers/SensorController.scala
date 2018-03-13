@@ -187,6 +187,13 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     ""
   }
 
+  def assignZone(deviceID: String): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
+    val zone: Int = (request.body \ "zone").as[Int]
+    devices.assignZone(deviceID, request.user.userID, zone).map(_ =>
+      Ok
+    )
+  }
+
   def setIdealTemp(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val temp = (request.body \ "temp").as[Double]
     users.setIdealTemp(request.user.userID, temp).map(_ => Ok)
