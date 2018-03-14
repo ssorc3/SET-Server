@@ -14,7 +14,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
 {
   def createZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
-    val zoneName = (request.body \ "zoneName").asOpt[String].getOrElse("default")
+    val zoneName = (request.body \ "zoneName").asOpt[String].getOrElse("default").toLowerCase
     zones.exists(userID, zoneName).flatMap{
       case false =>
         zones.create(userID, zoneName).map(_ => Ok("Zone " + zoneName + " created"))
@@ -37,12 +37,22 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
 
   def deleteZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
     val userID = request.user.userID
-    val zoneName = (request.body \ "zoneName").as[String]
-
-    zones.getID(userID, zoneName).flatMap{ z =>
-      z.headOption match {
-        case Some(x) => zones.delete(x, userID).map(_ => Ok)
-        case None => Future.successful(BadRequest("Zone does not exist"))
+    val zoneName = (request.body \ "zoneName").as[String].toLowerCase
+    val url: WSRequest = url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&locations=zoneName")
+    val response = url.delete()
+    response.map{ r =>
+      if((r.json \ "success").as[Boolean])
+      {
+        zones.getID(userID, zoneName).flatMap{ z =>
+          z.headOption match {
+            case Some(x) => zones.delete(x, userID).map(_ => Ok)
+            case None => Future.successful(BadRequest("Zone does not exist"))
+          }
+        }
+      }
+      else
+      {
+         InternalServerError("Could not delete zone from Find, please try again")
       }
     }
   }
