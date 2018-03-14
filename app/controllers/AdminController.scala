@@ -38,4 +38,8 @@ class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthentic
       Future.successful(Ok("Deleted user " + username))
     }
   }
+
+  def Cors() = Action(parse.default){
+    Ok
+  }
 }
