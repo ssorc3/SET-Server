@@ -39,7 +39,7 @@ class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthentic
     }
   }
 
-  def Cors(anything: String) = Action(parse.default){
+  def Cors() = Action(parse.default){
     Ok
   }
 }

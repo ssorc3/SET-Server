@@ -2,7 +2,7 @@
 GET     /                                       controllers.HomeController.index
 
 #AdminController
-OPTIONS /admin/$anything<[^/]+>                 controllers.AdminController.Cors(anything)
+OPTIONS /admin/user                             controllers.AdminController.Cors
 GET     /admin/user                             controllers.AdminController.getAllUsers
 DELETE  /admin/user                             controllers.AdminController.deleteUser
 POST    /admin/script                           controllers.AdminController.setAdminScript
@@ -10,7 +10,7 @@ POST    /admin/script                           controllers.AdminController.setA
 #UserController
 POST    /token                                  controllers.UserController.getToken
 POST    /create                                 controllers.UserController.createUser
-OPTIONS /create                                 controllers.AdminController.Cors()
+OPTIONS /create                                 controllers.AdminController.Cors
 
 #BridgeController
 GET     /bridgeWS                               controllers.BridgeController.bridgeWebSocket
