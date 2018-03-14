@@ -190,9 +190,38 @@ Sample request:
 returns OK<br>
 requires token
 
+### Alarm
+`POST /actuator/alarm`<br>
+Sample Request:
+```
+{
+  "on": true
+}
+```
+
 ## Signaling a photon
 `GET /flashPhoton/:deviceID`<br>
 returns 200
+
+## Ideal Temp
+### Set Ideal temp
+`POST /idealTemp`<br>
+Sample Request:
+```
+{
+  "temp": 20
+}
+```
+<br>
+
+### Get Ideal temp
+`GET /idealTemp`
+Sample Response:
+```
+{
+  "temp": 20
+}
+```
 
 ## Zones
 ### Create zone
