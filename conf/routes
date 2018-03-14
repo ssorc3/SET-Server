@@ -2,7 +2,7 @@
 GET     /                                       controllers.HomeController.index
 
 #AdminController
-OPTIONS /admin/$([^/]+)                         controllers.AdminController.Cors
+OPTIONS /admin/$anything<[^/]+>                 controllers.AdminController.Cors
 GET     /admin/user                             controllers.AdminController.getAllUsers
 DELETE  /admin/user                             controllers.AdminController.deleteUser
 POST    /admin/script                           controllers.AdminController.setAdminScript
