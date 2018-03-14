@@ -128,6 +128,10 @@ Sample Response:<br>
 ]
 ```
 
+### Motion Detected:
+`POST /sensor/motion/:deviceID`<br>
+
+
 ## Scripts
 ### Set a user's script:
 `POST /script` <br>
