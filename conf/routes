@@ -10,7 +10,7 @@ POST    /admin/script                           controllers.AdminController.setA
 #UserController
 POST    /token                                  controllers.UserController.getToken
 POST    /create                                 controllers.UserController.createUser
-OPTIONS /create                                 controllers.AdminController.Cors(anything)
+OPTIONS /create                                 controllers.AdminController.Cors()
 
 #BridgeController
 GET     /bridgeWS                               controllers.BridgeController.bridgeWebSocket
