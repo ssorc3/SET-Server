@@ -43,7 +43,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     response.map{ r =>
       if((r.json \ "success").as[Boolean])
       {
-        zones.getID(userID, zoneName).flatMap{ z =>
+        zones.getID(userID, zoneName).map{ z =>
           z.headOption match {
             case Some(x) => zones.delete(x, userID).map(_ => Ok)
             case None => Future.successful(BadRequest("Zone does not exist"))
