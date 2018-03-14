@@ -40,10 +40,10 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     val zoneName = (request.body \ "zoneName").as[String].toLowerCase
     val url: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&locations=zoneName")
     val response = url.delete()
-    response.map{ r =>
+    response.flatMap{ r =>
       if((r.json \ "success").as[Boolean])
       {
-        zones.getID(userID, zoneName).map{ z =>
+        zones.getID(userID, zoneName).flatMap{ z =>
           z.headOption match {
             case Some(x) => zones.delete(x, userID).map(_ => Ok)
             case None => Future.successful(BadRequest("Zone does not exist"))
@@ -52,7 +52,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
       }
       else
       {
-         InternalServerError("Could not delete zone from Find, please try again")
+         Future.successful(InternalServerError("Could not delete zone from Find, please try again"))
       }
     }
   }
