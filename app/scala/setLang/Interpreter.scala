@@ -17,7 +17,7 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
         for (action: Action <- statement.actions) {
           action match {
             case Notification(s) =>
-              actuators.sendNotification(userID, s)
+              actuators.sendNotificationToID(userID, s)
               result=true
 
             case Alarm(command) =>

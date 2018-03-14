@@ -6,12 +6,13 @@ import auth.SecuredAuthenticator
 import play.api.libs.json.JsValue
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import repositories.{ScriptRepository, UserRepository}
+import services.ActuatorService
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.setLang.Parser
 
 @Singleton
-class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, scripts: ScriptRepository, users: UserRepository)(implicit ec: ExecutionContext) extends AbstractController(cc)
+class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthenticator, scripts: ScriptRepository, users: UserRepository, actuators: ActuatorService)(implicit ec: ExecutionContext) extends AbstractController(cc)
 {
   def setAdminScript(): Action[JsValue] = auth.AdminAuthentication.async(parse.json) {implicit request =>
     val script = (request.body \ "script").asOpt[String].getOrElse("")
@@ -37,6 +38,18 @@ class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthentic
       users.deleteUser(username)
       Future.successful(Ok("Deleted user " + username))
     }
+  }
+
+  def sendNotification(): Action[JsValue] = auth.AdminAuthentication(parse.json) { implicit request =>
+    val body = (request.body \ "body").asOpt[String].getOrElse("")
+    val heading = (request.body \ "title").asOpt[String].getOrElse("SETApp")
+    val username = (request.body \ "username").asOpt[String]
+
+    username match {
+      case Some(u) => actuators.sendNotification(u, body, heading)
+      case None => actuators.sendGlobalNotification(body, heading)
+    }
+    Ok
   }
 
   def Cors() = Action(parse.default){
