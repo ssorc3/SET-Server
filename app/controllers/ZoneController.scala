@@ -38,7 +38,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
   def deleteZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) {implicit request =>
     val userID = request.user.userID
     val zoneName = (request.body \ "zoneName").as[String].toLowerCase
-    val url: WSRequest = url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&locations=zoneName")
+    val url: WSRequest = ws.url("http://sccug-330-03.lancs.ac.uk:8000/location?group=hopefulhyena&locations=zoneName")
     val response = url.delete()
     response.map{ r =>
       if((r.json \ "success").as[Boolean])
