@@ -176,8 +176,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
+          println("userid = " + o)
           users.usernameByID(o).map { username: Option[String] =>
-            println("user = " + username.get)
             getUserCurrentZone(username.getOrElse("")).map { zone =>
               println("zone = " + zone)
               if (zone != "") {
