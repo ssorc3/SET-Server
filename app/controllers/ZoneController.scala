@@ -18,7 +18,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
     val lightGroup = (request.body \ "lightGroup").asOpt[Int].getOrElse(0)
     zones.exists(userID, zoneName).flatMap{
       case false =>
-        zones.create(userID, zoneName).map(_ => Ok("Zone " + zoneName + " created"))
+        zones.create(userID, zoneName, lightGroup).map(_ => Ok("Zone " + zoneName + " created"))
       case true => Future.successful(BadRequest("Zone with the name " + zoneName + " already exists"))
     }
   }
