@@ -178,6 +178,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
         case Some(o) =>
           users.usernameByID(o).map { username: Option[String] =>
             getUserCurrentZone(username.getOrElse("")).map { zone =>
+              println("zone = " + zone)
               if (zone != "") {
                 devices.getDeviceZone(deviceID).map { zID =>
                   if (zID.head != -1) {
