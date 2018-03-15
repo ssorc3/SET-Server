@@ -7,3 +7,5 @@ case class TimeCondition(op: String, time1: String, time2: String) extends Condi
 
 case class AndCondition(left: Condition, right: Condition) extends Condition
 case class OrCondition(left: Condition, right: Condition) extends Condition
+
+case class Bool(b: Boolean) extends Condition

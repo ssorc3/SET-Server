@@ -18,7 +18,7 @@ class Parser extends StandardTokenParsers
 
   def conditional: Parser[Condition] = "if" ~ "(" ~> condition <~ ")" ~ "then" ^^ { a => a }
 
-  def condition: Parser[Condition] = andCondition | orCondition
+  def condition: Parser[Condition] = andCondition | orCondition | "true" ^^ {a =>Bool(true)}| "false" ^^ {a => Bool(false)}
 
   def andCondition: Parser[Condition] = orCondition ~ opt("&" ~ condition) ^^ {
                                           case a ~ Some("&" ~ b) => AndCondition(a, b)

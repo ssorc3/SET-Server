@@ -91,6 +91,9 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
           case "==" => t1.isEqual(t2)
           case "!=" => !t1.isEqual(t2)
         }
+
+      case Bool(b) =>
+        b
     }
   }
 
