@@ -177,7 +177,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
       os.headOption match {
         case Some(o) =>
           users.usernameByID(o).map { username: Option[String] =>
-            println("user = " + o)
+            println("user = " + username.get)
             getUserCurrentZone(username.getOrElse("")).map { zone =>
               println("zone = " + zone)
               if (zone != "") {
