@@ -34,6 +34,10 @@ class ZoneRepository @Inject() (protected val dbConfigProvider: DatabaseConfigPr
     zones.filter(_.id === zoneID).distinct.map(_.zoneName).result
   }.map(_.head)
 
+  def getZone(zoneID: Int): Future[Zone] = db.run {
+    zones.filter(_.id === zoneID).distinct.result
+  }.map(_.head)
+
   def exists(userID: String, zoneName: String): Future[Boolean] = db.run {
     zones.filter(z => z.userID === userID && z.zoneName === zoneName).exists.result
   }

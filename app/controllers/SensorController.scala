@@ -180,8 +180,9 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
               if (zone != "") {
                 devices.getDeviceZone(deviceID).map { zID =>
                   if (zID.head != -1) {
-                    zones.getName(zID.head).map { zName =>
-                      if (zName.toLowerCase != zone.toLowerCase) {
+                    zones.getZone(zID.head).map { z =>
+                      if (z.name.toLowerCase != zone.toLowerCase) {
+                        actuators.setLightSetting(o, z.lightGroup, isWhite=true, 0, 255)
                         scriptRunner.runScript(o, "motion")
                       }
                     }
