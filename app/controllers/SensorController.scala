@@ -172,6 +172,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
   }
 
   def motionDetected(deviceID: String): Action[AnyContent] = Action.async(parse.default) { implicit request =>
+    println("Motion Detected")
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
@@ -182,8 +183,12 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                   if (zID.head != -1) {
                     zones.getZone(zID.head).map { z =>
                       if (z.name.toLowerCase != zone.toLowerCase) {
-                        actuators.setLightSetting(o, z.lightGroup, isWhite=true, 0, 255)
-                        scriptRunner.runScript(o, "motion")
+                        sensors.getLatestUserTemperature(o).map{temp =>
+                          actuators.sendToUserBridge(o, "motion")
+                          actuators.setLightSetting(o, z.lightGroup, isWhite=true, 0, 255)
+                          scriptRunner.runScript(o, "motion")
+                          actuators.sendToUserBridge(o, "motion end")
+                        }
                       }
                     }
                   }
