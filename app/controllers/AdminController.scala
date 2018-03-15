@@ -29,8 +29,8 @@ class AdminController @Inject()(cc: ControllerComponents, auth: SecuredAuthentic
   }
 
   def deleteAdminScript(): Action[JsValue] = auth.AdminAuthentication(parse.json) { implicit request =>
-    val scriptName = (request.body \ "scriptName").asOpt[String] match {
-      case Some(s) => scripts.deleteUserScript("Admin", scriptName)
+    (request.body \ "scriptName").asOpt[String] match {
+      case Some(s) => scripts.deleteUserScript("Admin", s)
       case None =>
     }
     Ok
