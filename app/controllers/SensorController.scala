@@ -182,8 +182,8 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                 devices.getDeviceZone(deviceID).map { zID =>
                   if (zID.head != -1) {
                     zones.getZone(zID.head).map { z =>
+                      println("User: " + zone + " Device: " + z.name)
                       if (z.name.toLowerCase != zone.toLowerCase) {
-                        println("motion script")
                         actuators.sendToUserBridge(o, "motion")
                         scriptRunner.runScript(o, "motion")
                         actuators.sendToUserBridge(o, "motion end")
