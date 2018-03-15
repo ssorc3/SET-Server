@@ -8,7 +8,7 @@ import scala.setLang.model._
 import scala.concurrent.ExecutionContext
 
 class Interpreter(program: List[Statement], userID: String, actuators: ActuatorService, temperatureValue: Double, humidityValue: Double,
-                  lightValue: Double, noiseValue: Double)(implicit ec: ExecutionContext)
+                  lightValue: Double, noiseValue: Double, motionZone: Int)(implicit ec: ExecutionContext)
 {
   def run(): Boolean = {
     var result: Boolean = false
@@ -29,7 +29,12 @@ class Interpreter(program: List[Statement], userID: String, actuators: ActuatorS
               result = true
 
             case LightSetting(zone, isWhite, hue, brightness) =>
-              actuators.setLightSetting(userID, zone, isWhite, hue, brightness)
+              if(zone == -1)
+              {
+                actuators.setLightSetting(userID, motionZone, isWhite, hue, brightness)
+              }
+              else
+                actuators.setLightSetting(userID, zone, isWhite, hue, brightness)
               result=true
 
             case Lights(command) =>

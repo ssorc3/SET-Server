@@ -72,7 +72,8 @@ class Parser extends StandardTokenParsers
                                 "plug" ~> powerSetting ^^ { a => Plug(a)}             |
                                 "lights" ~> powerSetting ^^ { a => Lights(a)}         |
                                 ("lightSetting" ~> numericLit) ~ ("," ~> bool) ~ ("," ~> numericLit) ~ ("," ~> numericLit) ^^
-                                  {case a ~ b ~ c ~ d => LightSetting(a.toInt, b, c.toInt, d.toInt)}
+                                  {case a ~ b ~ c ~ d => LightSetting(a.toInt, b, c.toInt, d.toInt)} |
+                                ("lightSetting" ~> "zone") ~ ("," ~> bool) ~ ("," ~> numericLit) ~ ("," ~> numericLit) ^^ {case _ ~ b ~ c ~ d => LightSetting(-1, b, c.toInt, d.toInt)}
 
 
   def powerSetting: Parser[PowerSetting] = "on"  ^^^ PowerSetting.ON   |
