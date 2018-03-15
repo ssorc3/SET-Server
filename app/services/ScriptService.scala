@@ -24,7 +24,7 @@ class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepo
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
       case parser.Success(r: List[Statement], _) =>
-        val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise)
+        val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise, 0)
         try{
           if(interpreter.run()) {
             println("Script ran successfully")
