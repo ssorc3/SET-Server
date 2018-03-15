@@ -17,16 +17,17 @@ class ZoneRepository @Inject() (protected val dbConfigProvider: DatabaseConfigPr
     def id = column[Int]("zoneID", O.PrimaryKey, O.AutoInc)
     def userID = column[String]("userID")
     def zoneName = column[String]("deviceID")
+    def lightGroup = column[Int]("lightGroup")
 
-    def * = (id, userID, zoneName) <> ((Zone.apply _).tupled, Zone.unapply)
+    def * = (id, userID, zoneName, lightGroup) <> ((Zone.apply _).tupled, Zone.unapply)
   }
 
   val zones = TableQuery[ZoneTable]
 
-  def create(userID: String, zoneName: String): Future[Int] = db.run {
-    (zones.map(z => (z.userID, z.zoneName))
+  def create(userID: String, zoneName: String, lightGroup: Int): Future[Int] = db.run {
+    (zones.map(z => (z.userID, z.zoneName, lightGroup))
       returning zones.map(_.id)
-      into ((stuff, id) => Zone(id, stuff._1, stuff._2)) += (userID, zoneName))
+      into ((stuff, id) => Zone(id, stuff._1, stuff._2, stuff._3)) += (userID, zoneName, lightGroup))
   }.map(_.id)
 
   def getName(zoneID: Int): Future[String] = db.run {

@@ -7,6 +7,9 @@ GET     /admin/user                             controllers.AdminController.getA
 DELETE  /admin/user                             controllers.AdminController.deleteUser
 OPTIONS /admin/script                           controllers.AdminController.Cors
 POST    /admin/script                           controllers.AdminController.setAdminScript
+DELETE  /admin/script                           controllers.AdminController.deleteAdminScript
+OPTIONS /admin/device                           controllers.AdminController.Cors
+GET     /admin/device                           controllers.AdminController.getAllDevices
 OPTIONS /admin/notifications                    controllers.AdminController.Cors
 POST    /admin/notifications                    controllers.AdminController.sendNotification
 

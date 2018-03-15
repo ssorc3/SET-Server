@@ -26,7 +26,7 @@ class ScriptController @Inject()(cc: ControllerComponents, auth: SecuredAuthenti
 
   def removeScript(): Action[JsValue] = auth.JWTAuthentication.async(parse.tolerantJson) { implicit request =>
     val scriptName = (request.body \ "script").asOpt[String].getOrElse("default")
-    scripts.setUserScript(request.user.userID, scriptName, "").map{ _ =>
+    scripts.deleteUserScript(request.user.userID, scriptName).map{ _ =>
       Ok
     }
   }

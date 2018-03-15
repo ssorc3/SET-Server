@@ -28,6 +28,10 @@ class ScriptRepository @Inject() (protected val dbConfigProvider: DatabaseConfig
     db.run(scripts += Script(userID, scriptName, script, 0))
   }
 
+  def deleteUserScript(userID: String, scriptName: String): Future[Any] = db.run{
+    scripts.filter(s => s.userID === userID && s.scriptName === scriptName).delete
+  }
+
   def updateLastRun(userID: String, lastRun: Long): Future[Any] = {
     db.run(scripts.filter(_.userID === userID).map(_.lastRun).update(lastRun))
   }

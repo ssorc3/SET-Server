@@ -15,6 +15,7 @@ class ZoneController @Inject()(cc: ControllerComponents, auth: SecuredAuthentica
   def createZone(): Action[JsValue] = auth.JWTAuthentication.async(parse.json) { implicit request =>
     val userID = request.user.userID
     val zoneName = (request.body \ "zoneName").asOpt[String].getOrElse("default").toLowerCase
+    val lightGroup = (request.body \ "lightGroup").asOpt[Int].getOrElse(0)
     zones.exists(userID, zoneName).flatMap{
       case false =>
         zones.create(userID, zoneName).map(_ => Ok("Zone " + zoneName + " created"))

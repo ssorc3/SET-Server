@@ -5,7 +5,7 @@ import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.Codec
 
-case class Zone(id: Int, userID: String, name: String)
+case class Zone(id: Int, userID: String, name: String, lightGroup: Int)
 
 object Zone {
   implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[Zone]] = {
