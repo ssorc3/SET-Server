@@ -176,15 +176,14 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
     devices.getOwnerID(deviceID).map{os =>
       os.headOption match {
         case Some(o) =>
-          println("userid = " + o)
           users.usernameByID(o).map { username: Option[String] =>
             getUserCurrentZone(username.getOrElse("")).map { zone =>
-              println("zone = " + zone)
               if (zone != "") {
                 devices.getDeviceZone(deviceID).map { zID =>
                   if (zID.head != -1) {
                     zones.getZone(zID.head).map { z =>
                       if (z.name.toLowerCase != zone.toLowerCase) {
+                        println("motion script")
                         actuators.sendToUserBridge(o, "motion")
                         scriptRunner.runScript(o, "motion")
                         actuators.sendToUserBridge(o, "motion end")
