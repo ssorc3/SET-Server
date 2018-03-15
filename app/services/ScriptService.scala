@@ -12,7 +12,7 @@ import scala.setLang.model.Statement
 @Singleton
 class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepository, actuators: ActuatorService)(implicit ec: ExecutionContext)
 {
-  def runScript(userID: String, scriptName: String, motion: Boolean): Unit = {
+  def runScript(userID: String, scriptName: String, motion: Boolean, zone: Int): Unit = {
     val script: String = Await.result(scripts.getUserScript(userID, scriptName), Duration.Inf).headOption.getOrElse("")
     val lastRun: Long = Await.result(scripts.getUserLastRun(userID, scriptName), Duration.Inf).headOption.getOrElse(0L)
     if(!motion) {
@@ -28,7 +28,7 @@ class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepo
     val parser: Parser = new Parser
     parser.parseAll(parser.program, script) match {
       case parser.Success(r: List[Statement], _) =>
-        val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise, 0)
+        val interpreter: Interpreter = new Interpreter(r, userID, actuators, temperature, humidity, light, noise, zone)
         try{
           if(interpreter.run()) {
             println("Script ran successfully")
