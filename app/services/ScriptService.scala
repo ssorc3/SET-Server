@@ -12,10 +12,14 @@ import scala.setLang.model.Statement
 @Singleton
 class ScriptService @Inject()(scripts: ScriptRepository, sensors: SensorDataRepository, actuators: ActuatorService)(implicit ec: ExecutionContext)
 {
-  def runScript(userID: String, scriptName: String, isMotion: Boolean): Unit = {
+  def runScript(userID: String, scriptName: String, notMotion: Boolean): Unit = {
     val script: String = Await.result(scripts.getUserScript(userID, scriptName), Duration.Inf).headOption.getOrElse("")
     val lastRun: Long = Await.result(scripts.getUserLastRun(userID, scriptName), Duration.Inf).headOption.getOrElse(0L)
-    if(!isMotion && script == "" || ((System.currentTimeMillis()/1000) - lastRun) < 12*60*60) return
+    if(notMotion && script == "" || ((System.currentTimeMillis()/1000) - lastRun) < 12*60*60)
+      {
+        println()
+        return
+      }
     val temperature: Double = Await.result(sensors.getLatestUserTemperature(userID), Duration.Inf).headOption.getOrElse(0)
     val humidity: Double = Await.result(sensors.getLatestUserHumidity(userID), Duration.Inf).headOption.getOrElse(0)
     val light: Double = Await.result(sensors.getLatestUserLight(userID), Duration.Inf).headOption.getOrElse(0)
