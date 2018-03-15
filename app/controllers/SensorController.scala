@@ -186,7 +186,7 @@ class SensorController @Inject()(cc: MessagesControllerComponents, auth: Secured
                       if (z.name.toLowerCase != zone.toLowerCase) {
                         println("motion script")
                         actuators.sendToUserBridge(o, "motion")
-                        scriptRunner.runScript(o, "motion", notMotion=false)
+                        scriptRunner.runScript(o, "motion", motion=true)
                         actuators.sendToUserBridge(o, "motion end")
                       }
                       else
