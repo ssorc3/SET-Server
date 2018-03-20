@@ -25,9 +25,9 @@ class ZoneRepository @Inject() (protected val dbConfigProvider: DatabaseConfigPr
   val zones = TableQuery[ZoneTable]
 
   def create(userID: String, zoneName: String, lightGroup: Int): Future[Int] = db.run {
-    (zones.map(z => (z.userID, z.zoneName, lightGroup))
+    (zones.map(z => (z.userID, z.zoneName, z.lightGroup))
       returning zones.map(_.id)
-      into ((stuff, id) => Zone(id, stuff._1, stuff._2, 0)) += (userID, zoneName, 0))
+      into ((stuff, id) => Zone(id, stuff._1, stuff._2, stuff._3)) += (userID, zoneName, lightGroup))
   }.map(_.id)
 
   def getName(zoneID: Int): Future[String] = db.run {
