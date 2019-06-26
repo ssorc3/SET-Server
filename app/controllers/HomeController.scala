@@ -2,13 +2,29 @@ package controllers
 
 import javax.inject.Inject
 
-import models.{DeviceRepository, SensorDataRepository, UserRepository}
-import play.api.mvc.{AbstractController, ControllerComponents}
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import auth.JWTUtil
+import play.api.libs.streams.ActorFlow
+import play.api.mvc._
+import repositories.DeviceRepository
+import websockets.{SetWebSocket, WebSocketManager}
 
 import scala.concurrent.ExecutionContext
 
-class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc){
+class HomeController @Inject()(cc: ControllerComponents, jwtUtil: JWTUtil, implicit val devices: DeviceRepository)(implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends AbstractController(cc){
   def index() = Action { implicit request =>
-    Ok(request.body.toString)
+    Ok("Hello, World!")
+  }
+
+  def test(deviceID: String, message: String) = Action{
+    WebSocketManager.getConnection(deviceID) match {
+      case Some(connection) => {
+        println("Sending message to " + deviceID)
+        connection ! message
+        Ok
+      }
+      case None => BadRequest
+    }
   }
 }

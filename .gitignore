@@ -1,3 +1,4 @@
+.DS_Store
 logs
 start
 build
@@ -16,3 +17,4 @@ target
 build.gradle
 gradlew
 gradlew.bat
+ui/

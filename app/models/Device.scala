@@ -1,10 +1,14 @@
 package models
 
 import play.api.http._
-import play.api.mvc._
 import play.api.libs.json._
+import play.api.mvc._
 
-case class Device(deviceID: String, userID: String, deviceName: String)
+case class Bridge(bridgeID: String)
+
+case class Actuator()
+
+case class Device(deviceID: String, userID: String, deviceName: String, zoneID: Int)
 case class DeviceDTO(deviceID: String, deviceName: String)
 
 object Device {

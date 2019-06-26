@@ -4,44 +4,16 @@ import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.Codec
 
-case class TemperatureData(id: Int, deviceID: String, timestamp: Long, value: Double)
+case class SensorData(id: Int, deviceID: String, timestamp: Long, value: Double)
 
-object TemperatureData {
-  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[TemperatureData]] = {
+object SensorData {
+  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[SensorData]] = {
     Writeable(data => codec.encode(Json.toJson(data).toString))
   }
 
-  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[TemperatureData]] = {
+  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[SensorData]] = {
     ContentTypeOf(Some(ContentTypes.TEXT))
   }
 
-  implicit val deviceFormat: OFormat[TemperatureData] = Json.format[TemperatureData]
-}
-
-case class HumidityData(id: Int, deviceID: String, timestamp: Long, value: Double)
-
-object HumidityData {
-  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[HumidityData]] = {
-    Writeable(data => codec.encode(Json.toJson(data).toString))
-  }
-
-  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[HumidityData]] = {
-    ContentTypeOf(Some(ContentTypes.TEXT))
-  }
-
-  implicit val deviceFormat: OFormat[HumidityData] = Json.format[HumidityData]
-}
-
-case class LightData(id: Int, deviceID: String, timestamp: Long, value: Double)
-
-object LightData {
-  implicit def writeableSeq(implicit codec: Codec): Writeable[Seq[LightData]] = {
-    Writeable(data => codec.encode(Json.toJson(data).toString))
-  }
-
-  implicit def contentTypeSeq(implicit codec: Codec): ContentTypeOf[Seq[LightData]] = {
-    ContentTypeOf(Some(ContentTypes.TEXT))
-  }
-
-  implicit val deviceFormat: OFormat[LightData] = Json.format[LightData]
+  implicit val deviceFormat: OFormat[SensorData] = Json.format[SensorData]
 }
